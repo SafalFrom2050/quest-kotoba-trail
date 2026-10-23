@@ -1,5 +1,21 @@
 # Validation notes
 
+## Learning hint language — 2026-10-23
+
+- JavaScript syntax checks and all 18 Node tests passed. New checks cover old-save
+  migration, both saved language choices, invalid settings, blocked browser
+  storage, and complete translations for every memory note and practice hint.
+- Local browser QA confirmed English on first load, switching both directions,
+  persistence after reload, and immediate updates to lesson notes, revealed hints,
+  question support, and desktop field notes.
+- Enter and Space on the language switch preserve the current lesson/question.
+  Changing language after answering retains feedback, disabled answer choices,
+  and the recorded attempt. The QA field guide still showed exactly one attempt
+  and one discovery after switching and reloading.
+- Layouts were inspected at 1280px desktop and 390px/320px mobile CSS widths.
+  The mobile pages and lesson dialog had no horizontal overflow at those sizes.
+- No browser warnings or errors were observed in the exercised flows. QA used
+  `?qa=1` and its separate storage namespace. Physical phones were not tested.
 ## Standalone publication — 2026-10-23
 
 Checked the standalone copy using Node.js 24.2.0:

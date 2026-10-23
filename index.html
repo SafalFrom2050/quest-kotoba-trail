@@ -16,6 +16,7 @@
       <a class="brand" href="#" id="home-button" aria-label="Quest Kotoba Trail home"><span class="brand-mark">言</span><span>QUEST<span class="brand-sub">KOTOBA TRAIL</span></span></a>
       <div class="header-message"><span class="live-dot"></span> A countryside adventure. A little Japanese.</div>
       <nav class="header-actions" aria-label="Game settings">
+        <button class="icon-button language-button" id="language-button" data-language-toggle data-compact="true" aria-label="Learning hints: English. Switch to Nepalish." title="Learning hints: English. Switch to Nepalish.">EN</button>
         <button class="icon-button" id="guide-button" aria-label="Open field guide" title="Field guide">▤</button>
         <button class="icon-button" id="music-button" aria-label="Turn music off" aria-pressed="true" title="Music · M">♫</button>
         <button class="icon-button" id="sound-button" aria-label="Turn sound effects off" aria-pressed="true" title="Sound effects">♪</button>
@@ -88,6 +89,7 @@
     <button class="dialog-close" id="close-lesson-button" aria-label="Close lesson">×</button>
     <div class="lesson-topline"><span class="eyebrow" id="lesson-kind">KANJI SHRINE</span><span class="lesson-pause-label">Trail paused · take your time</span></div>
     <div class="lesson-word"><h2 id="lesson-title"></h2><span class="lesson-kana" id="lesson-kana"></span><span class="lesson-romaji" id="lesson-romaji"></span><strong id="lesson-meaning"></strong></div>
+    <div class="lesson-language-row"><button class="language-button lesson-language-button" data-language-toggle aria-label="Learning hints: English. Switch to Nepalish.">Hints: English ⇄</button></div>
     <div id="lesson-teach"><div class="memory-hook" id="lesson-hook"></div><p class="lesson-explanation" id="lesson-explanation"></p><div class="example-card"><span class="tiny-label">PUT IT TO WORK</span><p class="japanese-example" id="example-japanese" lang="ja"></p><p class="example-romaji" id="example-romaji"></p><p id="example-english"></p><button class="listen-button" id="listen-button" hidden>♪ Listen</button></div><button class="primary-button lesson-ready" id="ready-button">Try a quick challenge <span>→</span></button></div>
     <div id="lesson-quiz" hidden><span class="tiny-label">QUICK PRACTICE</span><h3 id="question-prompt"></h3><p class="question-context" id="question-context" lang="ja"></p><p class="example-romaji" id="question-romaji"></p><p class="question-support" id="question-support"></p><div class="answer-choices" id="answer-choices"></div><button class="hint-button" id="hint-button">↳ Peek at the memory note</button><p class="quiz-hint" id="quiz-hint" hidden></p><div class="answer-feedback" id="answer-feedback" hidden aria-live="polite"></div><button class="primary-button" id="continue-button" hidden>Got it. Let's jump! <span>→</span></button></div>
   </dialog>

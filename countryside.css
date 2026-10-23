@@ -43,3 +43,12 @@ dialog::backdrop{background:#36574486;backdrop-filter:blur(5px)}.lesson-pause-la
 .feature-glyph{color:#567851}#feature-meaning{color:#64754f}.meter-track{background:#daddbd}.meter-track span{background:linear-gradient(90deg,#9daf77,#76915c)}.notes-bottom>strong{color:#737f5c}
 .decorative-steps i{background:#b0bd83}.decorative-steps i:nth-child(2){background:#a3b579}.decorative-steps i:nth-child(3){background:#95ab6d}.decorative-steps i:nth-child(4){background:#819c60}.decorative-steps i:nth-child(5){background:#6d8957}
 .lesson-explanation{color:#59694a}.lesson-kana{color:#5c784e}.lesson-romaji,.example-romaji{color:#657751!important}.question-support,.guide-intro{color:#697955}.primary-button:active{box-shadow:0 2px 0 #34583b25}
+
+/* Learning hints can switch language without interrupting the current lesson. */
+.language-button{font-family:inherit;font-weight:700}
+.icon-button.language-button{font-size:11px;letter-spacing:.03em;flex-shrink:0}
+.lesson-language-row{display:flex;justify-content:flex-end;margin:0 0 16px}
+.lesson-language-button{min-height:36px;padding:7px 12px;border:1px solid #8b9b6955;border-radius:9px;background:#e6edcf;color:#4b6940;font-size:12px}
+.lesson-language-button:hover{background:#dce9c7}
+.language-button:focus-visible{outline:2px solid #567853;outline-offset:3px}
+@media(max-width:360px){.app-header{flex-wrap:wrap}.header-actions{margin-left:auto}}

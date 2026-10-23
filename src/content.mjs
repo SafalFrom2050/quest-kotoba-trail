@@ -15,7 +15,10 @@ export const LESSONS = [
     kana: 'ぎ',
     romaji: 'gi',
     meaning: 'Deliberation / discussion / debate',
-    hook: 'Quest ko meeting table samjha: sabai jana kura garera idea discuss garchhan. 議 ko gi = discussion ko signal, bro.',
+    hook: {
+      en: "Picture Quest at a meeting table, discussing ideas with the team. Link 議 and its reading gi to discussion.",
+      ne: 'Quest ko meeting table samjha: sabai jana kura garera idea discuss garchhan. 議 ko gi = discussion ko signal, bro.',
+    },
     explanation: '議 carries the idea of discussing or deliberating. Its reading in these compounds is gi: 会議 (kaigi) is a meeting, 議論 (giron) is discussion or debate, and 議員 (giin) is an assembly member. The kanji gives a shared idea; the whole compound gives the specific meaning. The meeting-table picture is a memory aid, not a historical explanation of the kanji.',
     examples: [
       { japanese: '会議で安全について議論します。', romaji: 'Kaigi de anzen ni tsuite giron shimasu.', english: 'We discuss safety at the meeting.' },
@@ -24,7 +27,10 @@ export const LESSONS = [
     questions: [
       {
         id: 'gi-1', prompt: 'In 会議 (kaigi), which sound belongs to 議?',
-        support: '会 ko sound kai ho. Aba baki kanji ko sound chhana.',
+        support: {
+          en: '会 is read kai. Now choose the sound of the remaining kanji.',
+          ne: '会 ko sound kai ho. Aba baki kanji ko sound chhana.',
+        },
         choices: [{ text: 'gi' }, { text: 'ron' }, { text: 'min' }], answer: 0,
         why: '会議 is kai + gi. 議 is read gi here; ron belongs to 論, and min belongs to 民.',
       },
@@ -44,7 +50,10 @@ export const LESSONS = [
   {
     id: 'ron', kind: 'kanji', title: '論', kana: 'ろん', romaji: 'ron',
     meaning: 'Argument / discussion / reasoning',
-    hook: 'Quest le idea bolera matra chhoddaina, reason pani dinchha. 論 lai reason ra discussion ko note-book sanga joda.',
+    hook: {
+      en: "Quest gives reasons for an idea instead of simply stating it. Link 論, ron, to a notebook full of reasoning and discussion.",
+      ne: 'Quest le idea bolera matra chhoddaina, reason pani dinchha. 論 lai reason ra discussion ko note-book sanga joda.',
+    },
     explanation: '論 often appears in compounds about reasoning, discussion, or written arguments. 議論 (giron) is a discussion or debate, 論文 (ronbun) is a research paper or thesis, and 結論 (ketsuron) is a conclusion. In all three, 論 is read ron. The word 論文 refers to a written work; it does not mean every kind of research activity.',
     examples: [
       { japanese: '会議で改善案を議論します。', romaji: 'Kaigi de kaizen-an o giron shimasu.', english: 'We discuss a proposal for improvement at the meeting.' },
@@ -73,7 +82,10 @@ export const LESSONS = [
   {
     id: 'kankei', kind: 'kanji', title: '関係', kana: 'かんけい', romaji: 'kankei',
     meaning: 'Relation / relationship / connection',
-    hook: 'Quest le dui gear bichko connection herchha: 関係 = kankei. Waripari ko scene samjhinu paryo bhane 環境 = kankyou; dui sound lai alag rakha.',
+    hook: {
+      en: "Quest checks the connection between two gears: 関係, kankei. The surrounding workshop is the environment: 環境, kankyou. Keep the two readings distinct.",
+      ne: 'Quest le dui gear bichko connection herchha: 関係 = kankei. Waripari ko scene samjhinu paryo bhane 環境 = kankyou; dui sound lai alag rakha.',
+    },
     explanation: '関係 (kankei) means a relation, relationship, or connection. Here 関 is kan and 係 is kei. 環境 (kankyou) means environment: its surroundings, conditions, or setting. Use ～に関係があります to say something is related to something else. A temperature-related problem uses 関係; lighting and ventilation are part of the 作業環境 (sagyou kankyou), the working environment.',
     examples: [
       { japanese: 'この問題は温度に関係があります。', romaji: 'Kono mondai wa ondo ni kankei ga arimasu.', english: 'This problem is related to temperature.' },
@@ -102,7 +114,10 @@ export const LESSONS = [
   {
     id: 'naosu', kind: 'kanji', title: '治す・直す', kana: 'なおす・なおす', romaji: 'naosu / naosu',
     meaning: 'Cure an illness / fix or correct something',
-    hook: 'Quest ko medicine bottle = 治す; wrench ra broken clock = 直す. Sound eutai naosu ho, tara object le kanji chhanauchha.',
+    hook: {
+      en: "Quest uses medicine to cure an illness: 治す. He uses a wrench to fix a broken clock: 直す. Both are naosu; what is being treated or repaired determines the kanji.",
+      ne: 'Quest ko medicine bottle = 治す; wrench ra broken clock = 直す. Sound eutai naosu ho, tara object le kanji chhanauchha.',
+    },
     explanation: 'Both verbs are read naosu and describe someone doing the action: they are transitive. 治す is used for curing an illness or healing an injury; 直す is used for fixing a broken object or correcting a mistake. The thing being cured or corrected usually takes を (o). Compare 病気を治す, cure an illness, with 時計を直す, fix a clock. The paired intransitive verbs are 治る and 直る, read naoru.',
     examples: [
       { japanese: '医師が病気を治します。', romaji: 'Ishi ga byouki o naoshimasu.', english: 'A doctor cures the illness.' },
@@ -132,7 +147,10 @@ export const LESSONS = [
   {
     id: 'naoru', kind: 'kanji', title: '治る・直る', kana: 'なおる・なおる', romaji: 'naoru / naoru',
     meaning: 'Recover / become fixed (intransitive)',
-    hook: 'Quest le result herchha: patient niko bhayo = 治る; clock feri chalyo = 直る. Naoru ma recovery ko result focus ho.',
+    hook: {
+      en: "Quest checks the result: the patient gets better, 治る; the clock works again, 直る. Both are naoru and focus on the changed condition.",
+      ne: 'Quest le result herchha: patient niko bhayo = 治る; clock feri chalyo = 直る. Naoru ma recovery ko result focus ho.',
+    },
     explanation: 'Both verbs are read naoru and describe a change in the subject: they are intransitive. 病気が治る means an illness gets better; 時計が直る means a clock becomes fixed. が marks the thing whose condition changes. This grammar does not claim that a machine repaired itself; the sentence simply focuses on the repaired result. Use 治す or 直す when naming someone’s act of curing or repairing.',
     examples: [
       { japanese: '病気が治りました。', romaji: 'Byouki ga naorimashita.', english: 'The illness got better.' },
@@ -161,7 +179,10 @@ export const LESSONS = [
   {
     id: 'osore', kind: 'grammar', title: '～恐れがある', kana: 'おそれがある', romaji: 'osore ga aru',
     meaning: 'There is a risk / danger that…',
-    hook: 'Quest ko warning sign dekhda “huna sakne naramro result” samjha. 恐れがある le risk bhancha; pakka bhayo bhaneko haina.',
+    hook: {
+      en: "Picture Quest spotting a warning sign about something that could go wrong. 恐れがある describes a risk, not an outcome that has already happened.",
+      ne: 'Quest ko warning sign dekhda “huna sakne naramro result” samjha. 恐れがある le risk bhancha; pakka bhayo bhaneko haina.',
+    },
     explanation: '～恐れがある describes a risk of an undesirable outcome, often in formal reports or warnings. Attach it to a plain-form clause, such as 落下する恐れがある, “there is a risk it will fall,” or to a noun with の, such as 故障の恐れがある, “there is a risk of breakdown.” The polite form is 恐れがあります. It expresses possibility, not certainty. 故障 is read koshou: the first ko is short, and shou is long.',
     examples: [
       { japanese: '故障の恐れがあります。', romaji: 'Koshou no osore ga arimasu.', english: 'There is a risk of breakdown.' },
@@ -191,7 +212,10 @@ export const LESSONS = [
   {
     id: 'motozuite', kind: 'grammar', title: '～に基づいて', kana: 'にもとづいて', romaji: 'ni motozuite',
     meaning: 'Based on / in accordance with…',
-    hook: 'Quest ko blueprint foundation ho: specification bata kaam ko base milchha. “Kun document ko aadhar ma?” bhanne bela に基づいて.',
+    hook: {
+      en: "Quest uses a blueprint as the foundation for his work. に基づいて answers the question: what document, evidence, or rule is this based on?",
+      ne: 'Quest ko blueprint foundation ho: specification bata kaam ko base milchha. “Kun document ko aadhar ma?” bhanne bela に基づいて.',
+    },
     explanation: 'Noun + に基づいて identifies the basis for an action or decision: a specification, standard, rule, or evidence. 基づいて comes from 基づく (motozuku), “be based on.” The kana contains づ; ordinary modern pronunciation is represented here as zu. 仕様書に基づいて means “based on / in accordance with the specification.” The phrase names a basis. In the purpose examples here, ～ために instead names a goal.',
     examples: [
       { japanese: '仕様書に基づいて作業します。', romaji: 'Shiyousho ni motozuite sagyou shimasu.', english: 'I will work according to the specification.' },
@@ -221,7 +245,10 @@ export const LESSONS = [
   {
     id: 'tameni', kind: 'grammar', title: '～ために', kana: 'ために', romaji: 'tame ni',
     meaning: 'For the purpose of / in order to…',
-    hook: 'Quest ko target flag samjha: “yo kaam kina?” Goal ko lagi action gareko ho bhane ために use gara.',
+    hook: {
+      en: "Picture Quest aiming for a target flag. ために connects an action with its purpose: what goal is he working toward?",
+      ne: 'Quest ko target flag samjha: “yo kaam kina?” Goal ko lagi action gareko ho bhane ために use gara.',
+    },
     explanation: 'In the purpose use, ～ために connects an action to an intended goal. Use a dictionary-form intentional verb + ために, as in 資格を取るために, “in order to obtain a qualification,” or noun + のために, as in 安全確認のために, “for safety checks.” With two intentional actions, the doer is normally the same. ために can also express a cause in other contexts; this lesson focuses on purpose.',
     examples: [
       { japanese: '資格を取るために、毎日勉強します。', romaji: 'Shikaku o toru tame ni, mainichi benkyou shimasu.', english: 'I study every day in order to obtain a qualification.' },
@@ -251,7 +278,10 @@ export const LESSONS = [
   {
     id: 'youni', kind: 'grammar', title: '～ように', kana: 'ように', romaji: 'you ni',
     meaning: 'So that… (a desired outcome)',
-    hook: 'Quest le bridge banauchha, sabai jana par pugna sakun bhanera. “...sakos / ...nahos” jasto desired result sanga ように samjha.',
+    hook: {
+      en: "Quest builds a bridge so that everyone can cross. Link ように with a desired result, such as being able to do something or preventing a problem.",
+      ne: 'Quest le bridge banauchha, sabai jana par pugna sakun bhanera. “...sakos / ...nahos” jasto desired result sanga ように samjha.',
+    },
     explanation: 'In this use, ～ように describes a desired outcome, especially an ability, a negative outcome to avoid, or a state that is not simply a deliberate act. Potential forms such as 使える (“can use”) and negative forms such as 故障しない (“does not break down”) often come before it. ～ために often states an intentional goal; ～ように often frames an outcome such as “so someone can…” or “so it does not…”. They can overlap in some contexts, so choose with the full sentence in mind.',
     examples: [
       { japanese: '新しいスタッフが使えるように、説明書を作りました。', romaji: 'Atarashii sutaffu ga tsukaeru you ni, setsumeisho o tsukurimashita.', english: 'I made a manual so that new staff can use it.' },
@@ -281,7 +311,10 @@ export const LESSONS = [
   {
     id: 'min', kind: 'kanji', title: '民', kana: 'みん', romaji: 'min',
     meaning: 'People / citizens / inhabitants',
-    hook: 'Quest ko town ma basne mancheharu samjha. 民 = people; 市民 ra 住民 ma pani tehi min ko sound aauchha.',
+    hook: {
+      en: "Picture the people living in Quest's town. 民 means people; its reading min also appears in 市民, shimin, and 住民, juumin.",
+      ne: 'Quest ko town ma basne mancheharu samjha. 民 = people; 市民 ra 住民 ma pani tehi min ko sound aauchha.',
+    },
     explanation: '民 carries the idea of people or inhabitants and is commonly read min in compounds. 市民 (shimin) means citizens or townspeople, 住民 (juumin) means residents, and 国民 (kokumin) means a nation’s people or citizens. The first kanji narrows which group of people is meant. The uu in juumin represents a long vowel.',
     examples: [
       { japanese: '住民に説明します。', romaji: 'Juumin ni setsumei shimasu.', english: 'We will explain it to the residents.' },
@@ -309,7 +342,10 @@ export const LESSONS = [
   {
     id: 'niyori', kind: 'grammar', title: '～により', kana: 'により', romaji: 'ni yori',
     meaning: 'Due to / caused by… (formal cause)',
-    hook: 'Quest ko error log ma “kina error aayo?” khoja. Cause ko noun pachhi により rakhda formal report jasto suninchha.',
+    hook: {
+      en: "Quest checks an error log to find the cause. A cause noun followed by により gives a formal report the sense of due to or because of.",
+      ne: 'Quest ko error log ma “kina error aayo?” khoja. Cause ko noun pachhi により rakhda formal report jasto suninchha.',
+    },
     explanation: 'Noun + により can identify the cause of an event in a formal report. 接触不良により means “due to poor contact.” により also has uses for means or an agent in other sentences, but this lesson practices cause. Keep the relationship clear: に基づいて names a basis, ために can name a purpose, and this により names what caused the reported event.',
     examples: [
       { japanese: '接触不良により、エラーが発生しました。', romaji: 'Sesshoku furyou ni yori, eraa ga hassei shimashita.', english: 'An error occurred due to poor contact.' },
@@ -338,7 +374,10 @@ export const LESSONS = [
   {
     id: 'jitsu', kind: 'kanji', title: '実', kana: 'じつ', romaji: 'jitsu',
     meaning: 'Reality / truth / substance; fruit in other uses',
-    hook: 'Quest le idea lai actual experiment ma check garchha. 実験 ko doubled kk yaad gara: jikken = experiment, jiken = incident.',
+    hook: {
+      en: "Quest tests an idea in a real experiment. Remember the doubled kk in 実験, jikken, experiment; 事件, jiken, means incident.",
+      ne: 'Quest le idea lai actual experiment ma check garchha. 実験 ko doubled kk yaad gara: jikken = experiment, jiken = incident.',
+    },
     explanation: '実 is often read jitsu, but compound readings can change. 実験 is jikken, an experiment, and 実際 is jissai, “actual / in reality.” Do not confuse 実験 (jikken) with 事件 (jiken), an incident or case: the kanji and the consonant length both differ. 実 can also mean fruit and be read mi in other words; this review focuses on practical compounds.',
     examples: [
       { japanese: '実験の結果を記録します。', romaji: 'Jikken no kekka o kiroku shimasu.', english: 'We record the results of the experiment.' },
@@ -367,7 +406,10 @@ export const LESSONS = [
   {
     id: 'kome', kind: 'kanji', title: '米', kana: 'こめ・べい', romaji: 'kome / bei',
     meaning: 'Rice; America in country-related compounds',
-    hook: 'Quest ko rice bowl = 米, kome. Country ko sign ma 米国 dekhe chai beikoku = United States samjha.',
+    hook: {
+      en: "Quest's rice bowl is 米, kome. On a country sign, 米国 is beikoku, the United States. The compound changes the reading and meaning.",
+      ne: 'Quest ko rice bowl = 米, kome. Country ko sign ma 米国 dekhe chai beikoku = United States samjha.',
+    },
     explanation: '米 as the everyday word for uncooked rice is read kome. It is also used as an abbreviation for America in compounds, where a common reading is bei: 米国 (beikoku) means the United States. Choose the reading from the word and context. 米を炊く (kome o taku) means cook rice; 米国 does not mean “rice country.”',
     examples: [
       { japanese: '米を炊きます。', romaji: 'Kome o takimasu.', english: 'I will cook rice.' },
@@ -393,6 +435,11 @@ export const LESSONS = [
     ],
   },
 ];
+
+export function learningText(text, language = 'en') {
+  if (typeof text === 'string') return text;
+  return text?.[language === 'ne' ? 'ne' : 'en'] ?? text?.en ?? '';
+}
 
 export function findLesson(id) {
   return LESSONS.find((lesson) => lesson.id === id) ?? null;

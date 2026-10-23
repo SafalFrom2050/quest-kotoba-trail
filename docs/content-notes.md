@@ -11,11 +11,20 @@ It does not read or write any external study notes.
 | Sky | ～に基づいて, ～ために, ～ように |
 | Journal | 民, ～により, 実, 米 |
 
-Each lesson has a meaning, a Romanized Nepalish memory hook, a focused
+Each lesson has a meaning, an English/Romanized Nepalish memory hook, a focused
 explanation, Japanese examples with romaji and English, and exactly three
 questions. Practice follows teaching, so a correct game response is practice
 with a hint, not proof of unaided retention. Campaign progress belongs to the
 game and must not be reported as the learner's authoritative study evidence.
+
+## Hint language
+
+Memory hooks and language-specific question support use `{ en, ne }` text pairs.
+`learningText` selects the saved preference and defaults to English. Existing
+player saves migrate to English without losing discoveries, attempts, or audio
+settings. Switching languages updates visible notes and hints without changing
+the active question or answer state. Navigation and explanations remain English;
+Japanese examples and readings are the same in both modes.
 
 ## Language conventions
 

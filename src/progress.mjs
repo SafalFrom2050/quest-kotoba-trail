@@ -1,5 +1,5 @@
 export const STORAGE_KEY = 'quest-kotoba-trail.v1';
-export const DEFAULT_PREFERENCES = Object.freeze({ music: true, sound: true, effects: true });
+export const DEFAULT_PREFERENCES = Object.freeze({ music: true, sound: true, effects: true, language: 'en' });
 export function freshProgress() { return { version: 1, attempts: [], discovered: [], worlds: {}, preferences: { ...DEFAULT_PREFERENCES }, lastWorld: 'wordwood' }; }
 export function normalizeProgress(value) {
   const result = freshProgress();
@@ -7,7 +7,8 @@ export function normalizeProgress(value) {
   result.attempts = Array.isArray(value.attempts) ? value.attempts.filter(a => a && typeof a.lessonId === 'string' && typeof a.correct === 'boolean').slice(-2000) : [];
   result.discovered = Array.isArray(value.discovered) ? [...new Set(value.discovered.filter(id => typeof id === 'string'))] : [];
   result.worlds = value.worlds && typeof value.worlds === 'object' && !Array.isArray(value.worlds) ? { ...value.worlds } : {};
-  for (const key of Object.keys(DEFAULT_PREFERENCES)) if (typeof value.preferences?.[key] === 'boolean') result.preferences[key] = value.preferences[key];
+  for (const key of ['music', 'sound', 'effects']) if (typeof value.preferences?.[key] === 'boolean') result.preferences[key] = value.preferences[key];
+  if (['en', 'ne'].includes(value.preferences?.language)) result.preferences.language = value.preferences.language;
   if (['wordwood', 'workshop', 'sky'].includes(value.lastWorld)) result.lastWorld = value.lastWorld;
   return result;
 }
@@ -26,6 +27,11 @@ export class ProgressStore {
   constructor(storage, key = STORAGE_KEY) { this.storage = storage; this.key = key; this.available = Boolean(storage); this.value = freshProgress(); try { this.value = normalizeProgress(JSON.parse(storage?.getItem(this.key) || 'null')); } catch { this.available = false; } }
   save() { try { this.storage?.setItem(this.key, JSON.stringify(this.value)); } catch { this.available = false; } return this.value; }
   attempt(value) { this.value = recordAttempt(this.value, value); return this.save(); }
-  setPreference(key, value) { if (key in DEFAULT_PREFERENCES) this.value.preferences[key] = Boolean(value); this.save(); }
+  setPreference(key, value) {
+    if (key === 'language') {
+      if (value === 'en' || value === 'ne') this.value.preferences.language = value;
+    } else if (Object.hasOwn(DEFAULT_PREFERENCES, key)) this.value.preferences[key] = Boolean(value);
+    this.save();
+  }
   complete(worldId, summary) { const old = this.value.worlds[worldId] || {}; this.value.worlds[worldId] = { completed: true, bestScore: Math.max(Number(old.bestScore) || 0, summary.score), bestTime: Math.min(Number(old.bestTime) || Infinity, summary.time), runs: (Number(old.runs) || 0) + 1 }; this.save(); }
 }

@@ -6,6 +6,12 @@ lesson shrines to build bridges through three worlds.
 
 ![Quest on the countryside trail — rendered game scene](docs/screenshots/countryside-wordwood-v002.png)
 
+## Play online
+
+**[Play Quest: Kotoba Trail](https://gamesp.xyz/quest-kotoba-trail/)** — free to
+play in your browser, on desktop or mobile. No installation or account needed.
+The game is hosted on GitHub Pages from the root of the `main` branch.
+
 ## Play locally
 
 Requires Node.js 18 or newer. There are **no packages to install**.
@@ -34,6 +40,7 @@ service is used during play.
 | Continue a lesson | Enter | Continue button |
 | Pause | Escape | Pause button |
 | Toggle music | M | Music button |
+| Switch learning hints | Click EN / NE in the header | Tap EN / NE |
 
 Land on pink spring pads for a boost. Stomp or dash through ink slimes.
 Falling returns you to the latest shrine checkpoint; solved bridges stay open.
@@ -48,9 +55,21 @@ contextual question; language mistakes never cost hearts.
 3. **Sunset Shrine** — ～に基づいて, ～ために, and ～ように.
 
 The field guide adds 民, ～により, 実, and 米. Thirteen lessons include
-Japanese, kana/romaji, meanings, Romanized Nepalish memory hooks, worked
+Japanese, kana/romaji, meanings, English or Romanized Nepalish memory hooks, worked
 sentences, and **39 contextual practice questions**. This is a focused review
 game, not a complete JLPT N3 syllabus.
+
+## Learning hint language
+
+**English is the default**, including for returning players who have not chosen
+a language yet. Use the **EN / NE** button in the header or **Hints: English /
+Nepalish** inside a lesson to switch both ways. All 13 memory notes, the practice
+hint, and the field notes update immediately without restarting the lesson or
+changing your answers. Japanese text, readings, and English explanations stay
+available in both modes.
+
+Your choice is saved in this browser alongside your existing progress. If browser
+storage is unavailable, the setting works for the current session.
 
 ## Countryside art direction
 

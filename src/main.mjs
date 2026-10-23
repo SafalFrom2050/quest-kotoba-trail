@@ -2,7 +2,7 @@ import { GameEngine } from './engine.mjs';
 import { SpriteAtlas } from './sprites.mjs';
 import { SoundEngine } from './audio.mjs';
 import { ProgressStore, practiceStats } from './progress.mjs';
-import { LESSONS, WORLD_LESSONS, findLesson } from './content.mjs';
+import { LESSONS, WORLD_LESSONS, findLesson, learningText } from './content.mjs';
 import { WORLDS, getWorld } from './worlds.mjs';
 
 const $ = id => document.getElementById(id);
@@ -29,6 +29,7 @@ export class QuestApp {
     $('start-button').addEventListener('click',()=>this.start(this.selectedWorld));
     $('home-button').addEventListener('click',e=>{e.preventDefault();this.home();});
     for(const id of ['guide-button','title-guide-button','notes-guide-button','win-guide-button'])$(id).addEventListener('click',()=>this.openGuide());
+    document.querySelectorAll('[data-language-toggle]').forEach(button=>button.addEventListener('click',()=>this.toggleLanguage()));
     $('music-button').addEventListener('click',()=>this.togglePreference('music'));
     $('sound-button').addEventListener('click',()=>this.togglePreference('sound'));
     $('fx-button').addEventListener('click',()=>this.togglePreference('effects'));
@@ -43,7 +44,7 @@ export class QuestApp {
     $('lesson-dialog').addEventListener('cancel',e=>{e.preventDefault();this.closeLesson();});
     $('ready-button').addEventListener('click',()=>this.showQuestion());
     $('continue-button').addEventListener('click',()=>this.continueLesson());
-    $('hint-button').addEventListener('click',()=>{$('quiz-hint').textContent=this.lesson.hook;$('quiz-hint').hidden=false;this.hinted=true;this.audio.cue('click');});
+    $('hint-button').addEventListener('click',()=>{$('quiz-hint').textContent=this.learningText(this.lesson.hook);$('quiz-hint').hidden=false;this.hinted=true;this.audio.cue('click');});
     $('listen-button').addEventListener('click',()=>this.listen());
     $('close-guide-button').addEventListener('click',()=>this.closeGuide());
     $('guide-dialog').addEventListener('cancel',e=>{e.preventDefault();this.closeGuide();});
@@ -64,6 +65,7 @@ export class QuestApp {
   }
   keyDown(e) {
     if(e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement)return;
+    if(e.target instanceof HTMLButtonElement&&e.target.hasAttribute('data-language-toggle')&&['Enter',' '].includes(e.key))return;
     const key=e.key.toLowerCase();
     if(key==='escape'){e.preventDefault();if(this.phase==='lesson')this.closeLesson();else if(this.phase==='guide')this.closeGuide();else if(this.phase==='playing')this.pause();else if(this.phase==='pause')this.resume();return;}
     if(this.phase==='lesson'){
@@ -105,8 +107,29 @@ export class QuestApp {
   renderTrails(){
     $('trail-picker').innerHTML=WORLDS.map((world,i)=>`<button class="trail-option ${world.id===this.selectedWorld?'selected':''}" data-world="${world.id}" aria-pressed="${world.id===this.selectedWorld}"><span class="trail-number">0${i+1}</span><span><strong>${escapeHTML(world.name)}</strong><small>${escapeHTML(world.kicker.toLowerCase())}</small></span><span class="trail-check">${this.store.value.worlds[world.id]?.completed?'✦':'↗'}</span></button>`).join('');
   }
+  learningText(text){return learningText(text,this.store.value.preferences.language);}
+  toggleLanguage(){
+    this.store.setPreference('language',this.store.value.preferences.language==='en'?'ne':'en');
+    this.renderLanguage();this.audio.cue('click');
+    if(this.phase==='playing')$('game-canvas').focus({preventScroll:true});
+    this.announce(`Learning hints switched to ${this.store.value.preferences.language==='en'?'English':'Nepalish'}.`);
+  }
+  renderLanguage(){
+    const ne=this.store.value.preferences.language==='ne',name=ne?'Nepalish':'English',next=ne?'English':'Nepalish';
+    document.querySelectorAll('[data-language-toggle]').forEach(button=>{
+      button.textContent=button.dataset.compact?(ne?'NE':'EN'):`Hints: ${name} ⇄`;
+      button.setAttribute('aria-label',`Learning hints: ${name}. Switch to ${next}.`);button.title=`Learning hints: ${name}. Switch to ${next}.`;
+    });
+    for(const id of ['notes-description','lesson-hook','quiz-hint','question-support'])$(id).lang=ne?'ne-Latn':'en';
+    if(this.featureLesson)$('notes-description').textContent=this.learningText(this.featureLesson.hook);
+    if(this.lesson){
+      $('lesson-hook').textContent=this.learningText(this.lesson.hook);$('quiz-hint').textContent=this.learningText(this.lesson.hook);
+      const support=this.learningText(this.question?.support);$('question-support').textContent=support;$('question-support').hidden=!support;
+    }
+  }
   togglePreference(key){const value=!this.store.value.preferences[key];this.store.setPreference(key,value);this.renderPreferences();void this.audio.unlock();if(key!=='sound'||value)this.audio.cue('click');}
   renderPreferences(){
+    this.renderLanguage();
     const p=this.store.value.preferences;this.audio.configure(p);this.engine.effects=p.effects&&!this.motionQuery.matches;
     document.body.classList.toggle('reduced-motion',!this.engine.effects);
     for(const [key,label] of [['music','music'],['sound','sound effects'],['effects','visual effects']]){const el=$(key==='effects'?'fx-button':`${key}-button`);const enabled=key==='effects'?this.engine.effects:p[key];el.setAttribute('aria-pressed',String(enabled));el.setAttribute('aria-label',`${enabled?'Turn off':'Turn on'} ${label}`);}
@@ -135,14 +158,14 @@ export class QuestApp {
     else if(this.phase==='title')$('status-line').textContent='Pick a trail. Follow the sparks.';
     else if(['lesson','guide','pause'].includes(this.phase))$('status-line').textContent='Trail paused. A little understanding goes a long way.';
   }
-  setFeature(lesson){if(!lesson)return;$('feature-glyph').textContent=lesson.title.length>6?'文':lesson.title;$('feature-kind').textContent=lesson.kind==='grammar'?'GRAMMAR · CONNECTIONS':'KANJI · A SMALL IDEA';$('feature-reading').textContent=lesson.romaji;$('feature-meaning').textContent=lesson.meaning;$('notes-title').textContent=lesson.kind==='grammar'?'Make ideas connect.':'A word opens a path.';$('notes-description').textContent=lesson.hook;$('notes-tip').textContent='A good guess is a start. Read the explanation, try a sentence, then let Quest carry it into the world.';}
+  setFeature(lesson){if(!lesson)return;this.featureLesson=lesson;$('feature-glyph').textContent=lesson.title.length>6?'文':lesson.title;$('feature-kind').textContent=lesson.kind==='grammar'?'GRAMMAR · CONNECTIONS':'KANJI · A SMALL IDEA';$('feature-reading').textContent=lesson.romaji;$('feature-meaning').textContent=lesson.meaning;$('notes-title').textContent=lesson.kind==='grammar'?'Make ideas connect.':'A word opens a path.';$('notes-description').textContent=this.learningText(lesson.hook);$('notes-tip').textContent='A good guess is a start. Read the explanation, try a sentence, then let Quest carry it into the world.';}
   renderDiscoveries(){const count=this.store.value.discovered.filter(id=>campaignIds.includes(id)).length;$('discovery-count').textContent=`${count} / 9`;$('discovery-meter').style.width=`${count/9*100}%`;}
   openLesson(id,{source='shrine'}={}) {
     const lesson=findLesson(id);if(!lesson)return;
-    this.lessonReturn=source==='guide'?'guide':this.phase;this.lessonSource=source;this.lesson=lesson;this.hinted=true;this.quizState='teach';
+    this.lessonReturn=source==='guide'?'guide':this.phase;this.lessonSource=source;this.lesson=lesson;this.question=null;this.hinted=true;this.quizState='teach';
     if($('guide-dialog').open)$('guide-dialog').close();this.setPhase('lesson');this.setFeature(lesson);
     $('lesson-kind').textContent=lesson.kind==='grammar'?'GRAMMAR SHRINE':'KANJI SHRINE';$('lesson-title').textContent=lesson.title;$('lesson-kana').textContent=lesson.kana;$('lesson-romaji').textContent=lesson.romaji;$('lesson-meaning').textContent=lesson.meaning;
-    $('lesson-hook').textContent=lesson.hook;$('lesson-explanation').textContent=lesson.explanation;const example=lesson.examples[0];$('example-japanese').textContent=example.japanese;$('example-romaji').textContent=example.romaji;$('example-english').textContent=example.english;
+    $('lesson-hook').textContent=this.learningText(lesson.hook);$('lesson-explanation').textContent=lesson.explanation;const example=lesson.examples[0];$('example-japanese').textContent=example.japanese;$('example-romaji').textContent=example.romaji;$('example-english').textContent=example.english;
     $('lesson-teach').hidden=false;$('lesson-quiz').hidden=true;$('listen-button').hidden=!this.voice;
     $('lesson-dialog').showModal();$('lesson-dialog').scrollTop=0;$('close-lesson-button').focus({preventScroll:true});
     this.audio.cue('shrine');this.announce(`${lesson.title}, ${lesson.romaji}. ${lesson.meaning}.`);
@@ -150,7 +173,7 @@ export class QuestApp {
   showQuestion(){
     const attempts=this.store.value.attempts.filter(a=>a.lessonId===this.lesson.id).length;this.question=this.lesson.questions[attempts%this.lesson.questions.length];this.quizState='question';
     $('lesson-teach').hidden=true;$('lesson-quiz').hidden=false;$('question-prompt').textContent=this.question.prompt;
-    $('question-context').textContent=this.question.context||'';$('question-context').hidden=!this.question.context;$('question-romaji').textContent=this.question.romaji||'';$('question-romaji').hidden=!this.question.romaji;$('question-support').textContent=this.question.support||'';$('question-support').hidden=!this.question.support;
+    $('question-context').textContent=this.question.context||'';$('question-context').hidden=!this.question.context;$('question-romaji').textContent=this.question.romaji||'';$('question-romaji').hidden=!this.question.romaji;const support=this.learningText(this.question.support);$('question-support').textContent=support;$('question-support').hidden=!support;
     $('answer-feedback').hidden=true;$('continue-button').hidden=true;$('quiz-hint').hidden=true;$('hint-button').hidden=false;
     $('answer-choices').innerHTML=this.question.choices.map((choice,i)=>`<button class="answer-choice" data-answer="${i}"><span class="choice-key">${i+1}</span><span>${escapeHTML(choice.text)}${choice.note?`<small>${escapeHTML(choice.note)}</small>`:''}</span></button>`).join('');
     $('answer-choices').querySelectorAll('button').forEach((button,i)=>button.addEventListener('click',()=>this.answer(i)));
