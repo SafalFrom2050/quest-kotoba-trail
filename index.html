@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#ede7d4">
+  <meta name="description" content="A cozy Japanese and fantasy countryside platform adventure with Quest, kanji, grammar, chiptunes, and selective 3D scenery.">
+  <title>Quest · Kotoba Trail</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect rx='18' width='64' height='64' fill='%236b8c57'/%3E%3Cpath d='M36 9 18 35h13l-4 21 21-29H34z' fill='%23fff4d6'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="countryside.css">
+</head>
+<body class="is-title">
+  <div class="app-shell">
+    <header class="app-header">
+      <a class="brand" href="#" id="home-button" aria-label="Quest Kotoba Trail home"><span class="brand-mark">言</span><span>QUEST<span class="brand-sub">KOTOBA TRAIL</span></span></a>
+      <div class="header-message"><span class="live-dot"></span> A countryside adventure. A little Japanese.</div>
+      <nav class="header-actions" aria-label="Game settings">
+        <button class="icon-button" id="guide-button" aria-label="Open field guide" title="Field guide">▤</button>
+        <button class="icon-button" id="music-button" aria-label="Turn music off" aria-pressed="true" title="Music · M">♫</button>
+        <button class="icon-button" id="sound-button" aria-label="Turn sound effects off" aria-pressed="true" title="Sound effects">♪</button>
+        <button class="icon-button" id="fx-button" aria-label="Reduce visual effects" aria-pressed="true" title="Visual effects">✦</button>
+        <button class="icon-button" id="pause-button" aria-label="Pause game" title="Pause · Esc">Ⅱ</button>
+      </nav>
+    </header>
+
+    <main class="game-layout">
+      <section class="stage-wrap" aria-label="Platform adventure">
+        <div class="game-stage">
+          <canvas id="game-canvas" width="1280" height="720" tabindex="0" aria-label="Quest platformer. Move with A and D or arrows, jump with Space or W, dash with Shift or K, and interact with E."></canvas>
+          <div class="stage-vignette" aria-hidden="true"></div>
+          <div class="hud" id="hud" hidden>
+            <div class="hud-world"><span class="tiny-label" id="hud-kicker">TRAIL 01</span><strong id="hud-world">Wordwood</strong></div>
+            <div class="hud-health"><span id="hearts" aria-label="3 hearts">♥ ♥ ♥</span><span id="shrines-count">0 / 3 shrines</span></div>
+            <div class="hud-score"><strong id="score">000000</strong><span><span id="coins-count">0</span> word sparks <b id="combo"></b></span></div>
+          </div>
+          <div class="world-banner" id="world-banner" hidden><small id="banner-kicker"></small><strong id="banner-title"></strong><span id="banner-subtitle"></span></div>
+          <div class="toast" id="toast" role="status" hidden></div>
+          <button id="interact-button" class="interact-prompt" hidden><kbd>E</kbd><span>Open lesson shrine</span></button>
+          <div class="boost-indicator" id="boost-indicator" hidden>✦ MEMORY BOOST</div>
+
+          <section class="scene-overlay title-screen" id="title-screen" aria-labelledby="title-heading">
+            <div class="title-copy">
+              <div class="eyebrow"><span>✦</span> A LITTLE COUNTRYSIDE ADVENTURE</div>
+              <h1 id="title-heading">Small jumps.<br><em>Big discoveries.</em></h1>
+              <p>Wander through rice fields and cozy cottages, help a windmill village, and follow the lanterns to a sunset shrine.</p>
+              <div class="title-actions"><button class="primary-button" id="start-button">Let's adventure <span>↗</span></button><button class="quiet-button" id="title-guide-button">Browse the field guide</button></div>
+              <div class="title-controls"><span><kbd>A</kbd><kbd>D</kbd> move</span><span><kbd>SPACE</kbd> double jump</span><span><kbd>SHIFT</kbd> dash</span></div>
+              <div class="title-note">No countdown on lessons. Read, try, then fly.</div>
+            </div>
+            <div class="title-trails">
+              <div class="title-character-wrap"><canvas id="title-character" width="200" height="210" aria-hidden="true"></canvas><div class="character-caption">YOUR COMPANION · QUEST</div></div>
+              <div class="trail-picker" id="trail-picker" aria-label="Choose a trail"></div>
+            </div>
+          </section>
+
+          <section class="scene-overlay pause-screen" id="pause-screen" hidden aria-labelledby="pause-heading">
+            <div class="compact-card"><span class="eyebrow">TAKE A BREATHER</span><h2 id="pause-heading">Quest is waiting.</h2><p>Your lesson progress stays with you.</p><button class="primary-button" id="resume-button">Back to the trail →</button><button class="quiet-button" id="restart-button">Restart this trail</button><button class="quiet-button" id="pause-home-button">Choose another world</button></div>
+          </section>
+
+          <section class="scene-overlay win-screen" id="win-screen" hidden aria-labelledby="win-heading">
+            <div class="compact-card win-card"><span class="win-star">✦</span><span class="eyebrow" id="win-kicker">TRAIL COMPLETE</span><h2 id="win-heading">Words became a path.</h2><p id="win-message"></p><div class="win-stats" id="win-stats"></div><button class="primary-button" id="next-button">Next adventure →</button><button class="quiet-button" id="win-guide-button">See what you learned</button><button class="quiet-button" id="win-home-button">Back to the map</button></div>
+          </section>
+        </div>
+        <div class="stage-footer"><span id="status-line">Pick a trail. Follow the sparks.</span><span class="footer-badge">ジャンプ • LEARN • REPEAT</span></div>
+        <div class="touch-controls" id="touch-controls" aria-label="Touch controls">
+          <div class="touch-directions"><button data-control="left" aria-label="Move left">←</button><button data-control="right" aria-label="Move right">→</button></div>
+          <div class="touch-abilities"><button data-control="dash" aria-label="Dash" class="dash-touch">ϟ</button><button data-control="jump" aria-label="Jump or double jump" class="jump-touch">↑</button></div>
+        </div>
+      </section>
+
+      <aside class="trail-notes" aria-label="Trail notes">
+        <div class="notes-heading"><span class="eyebrow">YOUR FIELD NOTES</span><span class="notes-star">✦</span></div>
+        <h2 id="notes-title">Words are<br>little superpowers.</h2>
+        <p id="notes-description">Each shrine gives you a useful idea, a real sentence, and a quick chance to try it.</p>
+        <div class="note-feature"><div class="feature-glyph" id="feature-glyph">言</div><div><span class="tiny-label" id="feature-kind">KOTOBA · WORDS</span><strong id="feature-reading">kotoba</strong><span id="feature-meaning">Your next discovery is on the trail.</span></div></div>
+        <div class="learning-meter"><div><span>Practice discoveries</span><strong id="discovery-count">0 / 9</strong></div><div class="meter-track"><span id="discovery-meter"></span></div></div>
+        <div class="notes-tip"><span>↳</span><p id="notes-tip">Double jump for high sparks. Dash through ink slimes. Visit glowing shrines to build your path.</p></div>
+        <button class="outline-button" id="notes-guide-button">Open field guide <span>↗</span></button>
+        <div class="notes-bottom"><span class="tiny-label">TODAY'S MOOD</span><strong>Curious. Brave. A little pixelated.</strong><div class="decorative-steps" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div></div>
+      </aside>
+    </main>
+
+    <footer class="app-footer"><span>Made for small, satisfying learning loops.</span><span>Sound + sparkle on your terms.</span></footer>
+  </div>
+
+  <dialog id="lesson-dialog" class="lesson-dialog" aria-labelledby="lesson-title">
+    <button class="dialog-close" id="close-lesson-button" aria-label="Close lesson">×</button>
+    <div class="lesson-topline"><span class="eyebrow" id="lesson-kind">KANJI SHRINE</span><span class="lesson-pause-label">Trail paused · take your time</span></div>
+    <div class="lesson-word"><h2 id="lesson-title"></h2><span class="lesson-kana" id="lesson-kana"></span><span class="lesson-romaji" id="lesson-romaji"></span><strong id="lesson-meaning"></strong></div>
+    <div id="lesson-teach"><div class="memory-hook" id="lesson-hook"></div><p class="lesson-explanation" id="lesson-explanation"></p><div class="example-card"><span class="tiny-label">PUT IT TO WORK</span><p class="japanese-example" id="example-japanese" lang="ja"></p><p class="example-romaji" id="example-romaji"></p><p id="example-english"></p><button class="listen-button" id="listen-button" hidden>♪ Listen</button></div><button class="primary-button lesson-ready" id="ready-button">Try a quick challenge <span>→</span></button></div>
+    <div id="lesson-quiz" hidden><span class="tiny-label">QUICK PRACTICE</span><h3 id="question-prompt"></h3><p class="question-context" id="question-context" lang="ja"></p><p class="example-romaji" id="question-romaji"></p><p class="question-support" id="question-support"></p><div class="answer-choices" id="answer-choices"></div><button class="hint-button" id="hint-button">↳ Peek at the memory note</button><p class="quiz-hint" id="quiz-hint" hidden></p><div class="answer-feedback" id="answer-feedback" hidden aria-live="polite"></div><button class="primary-button" id="continue-button" hidden>Got it. Let's jump! <span>→</span></button></div>
+  </dialog>
+
+  <dialog id="guide-dialog" class="guide-dialog" aria-labelledby="guide-title">
+    <button class="dialog-close" id="close-guide-button" aria-label="Close field guide">×</button>
+    <div class="eyebrow">COLLECT IDEAS, NOT JUST COINS</div><h2 id="guide-title">Quest's field guide</h2><p class="guide-intro">Useful kanji and grammar, ready whenever you need them. Practice stays in this browser.</p>
+    <div class="guide-summary" id="guide-summary"></div><div class="guide-filters" id="guide-filters"><button data-filter="all" class="active">Everything</button><button data-filter="kanji">Kanji</button><button data-filter="grammar">Grammar</button><button data-filter="discovered">Discovered</button></div><div class="guide-grid" id="guide-grid"></div><div class="guide-footer"><span>After-lesson practice is recorded as supported practice.</span><button class="outline-button" id="export-button">Export practice log ↓</button></div>
+  </dialog>
+  <div class="sr-only" id="announcer" aria-live="polite" aria-atomic="true"></div>
+  <script type="module" src="src/main.mjs"></script>
+</body>
+</html>

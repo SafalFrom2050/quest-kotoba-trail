@@ -1,0 +1,19 @@
+{
+  "name": "quest-kotoba-trail",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "A joyful Japanese-learning platformer starring Quest.",
+  "scripts": {
+    "start": "node server.mjs",
+    "check": "node --check src/main.mjs && node --check src/engine.mjs && node --check src/audio.mjs && node --check src/physics.mjs && node --check src/progress.mjs && node --check src/content.mjs && node --check src/worlds.mjs && node --check src/sprites.mjs && node --check src/low-poly.mjs && node --check src/countryside.mjs",
+    "test": "node --test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SafalFrom2050/quest-kotoba-trail.git"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

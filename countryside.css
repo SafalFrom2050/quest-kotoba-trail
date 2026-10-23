@@ -1,0 +1,45 @@
+/* Warm paper, timber and meadow colors connect the interface to Quest's world. */
+:root{color-scheme:light;--bg:#ede7d4;--surface:#f9f3e2;--ink:#32483e;--muted:#7d826b;--mint:#547c59;--gold:#9a7036;--line:#8d987031;--accent:#557c59}
+body{background:radial-gradient(ellipse at 9% 0%,#dbe5ce 0%,transparent 52%),radial-gradient(ellipse at 90% 90%,#eed9b8 0%,transparent 44%),var(--bg)}
+.brand-mark{background:#5e805a;color:#fff4d6;border:2px solid #7f9a6c;box-shadow:0 4px 0 #49624823;border-radius:11px}
+.brand{color:#405b43}.brand-sub{color:#8a8b71}.live-dot{background:#8da368;box-shadow:none}
+.icon-button{background:#faf4df;border-color:#a7af843b;color:#62785a;box-shadow:0 3px 0 #67724c10}
+.icon-button:hover{background:#e1e9cf}.game-stage{background:#c4dac7;border:3px solid #fbf5e2;box-shadow:0 14px 40px #68592b19,0 2px 0 #949b7444;border-radius:19px}
+.game-stage::after{border-color:#697c4420}.stage-vignette{box-shadow:inset 0 0 70px #5476470c}
+.stage-footer{color:#73805e}.footer-badge{color:#8d926d}.app-footer{color:#899077}
+.hud{color:#344d3a;text-shadow:0 1px 0 #fff8}.hud .tiny-label{color:#596d47}.hud-health{background:#fbf1d4dc;border:1px solid #74815825;backdrop-filter:blur(6px)}
+#hearts{color:#b86e5b}#shrines-count{color:#637650}.hud-score>span{color:#5d704b}#combo{color:#926431}
+.world-banner{color:#304e3a;text-shadow:0 2px 0 #fff6}.world-banner small{color:#3f744f}.world-banner>span{color:#485d42}
+.toast{background:#fff7dfed;border-color:#7b8a573b;color:#4c6347;box-shadow:0 5px 18px #70632914}
+.interact-prompt{background:#fff9e7;color:#3c5b42;border:1px solid #8a9f6344;box-shadow:0 6px 18px #706b3333}
+.interact-prompt kbd{background:#e6edcf;border-color:#a8b58b}.boost-indicator{background:#f6e8bddd;color:#6b713c;border:1px solid #b9b67b5c}
+.scene-overlay{background:linear-gradient(90deg,#f9f2deed 0%,#f9f2deba 48%,#e5ecc21c 100%)}
+.title-copy h1{color:#364f3c}.title-copy h1 em{color:#6b8855}.eyebrow{color:#6b7f50}.title-copy>p{color:#6c795b}
+.primary-button{background:#567853;color:#fff9df;box-shadow:0 4px 0 #34583b25,0 8px 25px #566d4220;border:1px solid #53724a}
+.primary-button:hover{background:#66875e}.primary-button>span{color:#e6eab8}.quiet-button{color:#74815a}.quiet-button:hover{color:#3e613e}
+kbd{border-color:#7e8a6236;background:#fff9e0;box-shadow:0 2px 0 #79825620;color:#697751}
+.title-controls,.title-note{color:#8b906d}.title-character-wrap{position:relative}
+.title-character-wrap::before{content:"";position:absolute;width:96px;height:25px;left:50%;bottom:13px;transform:translateX(-50%);border-radius:50%;background:#84965624;border:1px solid #c6cd9f}
+#title-character{position:relative;z-index:1}.character-caption{color:#758259;position:relative;z-index:2}
+.trail-option{background:#faf4dedb;border-color:#8c99763a;color:#536445;box-shadow:0 3px 0 #8a895713}
+.trail-option:hover{background:#fff9e5;border-color:#8b9c72}.trail-option.selected{background:#e8eed1eb;border-color:#8f9f6c;box-shadow:inset 3px 0 0 #82965f}
+.trail-number{color:#a6a07b}.trail-option strong{color:#465a3c}.trail-option small{color:#88936c}.trail-check{color:#6d8051}
+.trail-notes{background:linear-gradient(145deg,#fbf5e4,#eee9ce);border-color:#8d98702e;box-shadow:0 8px 24px #6d654013}
+.trail-notes h2{color:#47613e}.notes-description{color:#7f866a}.feature-word{color:#476a44}.feature-kind{color:#8c9470}.feature-reading{color:#65815b}.feature-meaning{color:#677355}
+.discovery-label,.notes-tip,.notes-bottom,.notes-mood{color:#88916f}.discovery-track{background:#dedfc1}.discovery-meter{background:#879e62}.outline-button{background:#fff7e3;color:#627b53;border-color:#8b9b6938}.outline-button:hover{background:#e5ebcf}
+.compact-card{background:#faf3df;border-color:#9caa7144;box-shadow:0 18px 70px #655d3935}.compact-card h2{color:#48613f}.compact-card p{color:#7a8265}.win-star{color:#b88d48}.win-stats{background:#e9edd3}.win-stats strong{color:#5c7950}.win-stats span{color:#8a9271}
+.touch-button{background:#faf1d9;color:#6d7a4f;border-color:#9aab7340;box-shadow:0 5px 0 #8693581a}.touch-button.jump{background:#719763;color:#fff5d8}.touch-button.dash{color:#a48044}.touch-button.pressed{background:#d5e4bd}
+dialog{background:#fcf6e7;border-color:#9eab753b;box-shadow:0 20px 90px #4c583244}.dialog-close{background:#dde4c73b;color:#74865f}.dialog-close:hover{background:#e4ebd0;color:#3d5d3f}
+dialog::backdrop{background:#36574486;backdrop-filter:blur(5px)}.lesson-pause-label{color:#899173}.lesson-word h2{color:#365b42}.lesson-kana{color:#6b865e}.lesson-romaji{color:#8c956f}.lesson-word>strong{color:#956d37}
+.memory-hook{background:#e6edcf9c;border-left-color:#91a76b;color:#536b44}.lesson-explanation{color:#657253}.example-card{background:#f0edda;border-color:#9fa77b3b}.example-card p{color:#798266}.example-card .japanese-example{color:#3d5d42}.example-romaji{color:#688159!important}.listen-button{background:#e0e7c7;color:#637a50}
+#question-prompt{color:#405b3e}.question-context{background:#f1ecd6;color:#8e6d37}.question-support{color:#808b69}.answer-choice{background:#f2eed9;border-color:#a3ad7a3d;color:#4e6545}.answer-choice:hover:not(:disabled){background:#e6edce;border-color:#99ac71}.answer-choice small{color:#8b9474}.answer-choice .choice-key{background:#e0e5c8;color:#8b9775}
+.answer-choice.correct{background:#dce9c7;border-color:#8da66e;color:#4b6940}.answer-choice.wrong{background:#f3dfcf;border-color:#c28d79;color:#98634f}.hint-button{color:#809366}.quiz-hint{background:#e6edcf;color:#60774e}.answer-feedback{background:#e5edcf;color:#5d794e;border-color:#a4b68677}.answer-feedback.is-wrong{background:#f5e3d5;color:#916b56;border-color:#c69f8166}
+.guide-stat{background:#eff0d9}.guide-stat strong{color:#6f8756}.guide-filters button{background:#eaeccf;color:#86936c}.guide-filters .active{background:#799461;color:#fff8dc}.guide-entry{background:#f6f1dd;border-color:#a5b08235}.guide-entry:hover{border-color:#9bac72}.guide-entry .guide-word{color:#456545}.guide-entry .guide-romaji{color:#829266}.guide-entry .guide-meaning{color:#6c7a56}.guide-entry .entry-badge{color:#a78142}.guide-entry .entry-badge.locked{color:#9a9e7b}.guide-footer>span{color:#8c9575}
+@media(max-width:600px){.title-screen{background:linear-gradient(105deg,#faf2dedb,#faf2deba)}.game-stage{border-width:2px}.icon-button{background:#faf3de}.title-copy h1{font-size:34px}.trail-option.selected{box-shadow:inset 0 3px 0 #82965f}}
+
+/* Shared component selectors from the original responsive layout. */
+.title-character-wrap::before{top:auto}
+.touch-controls button{background:#faf1d9;color:#6d7a4f;border-color:#9aab7340;box-shadow:0 5px 0 #8693581a}.touch-controls .jump-touch{background:#719763;color:#fff5d8}.touch-controls .dash-touch{color:#a48044}.touch-controls button.pressed{background:#d5e4bd;box-shadow:0 1px 0 #8693581a}
+.feature-glyph{color:#567851}#feature-meaning{color:#64754f}.meter-track{background:#daddbd}.meter-track span{background:linear-gradient(90deg,#9daf77,#76915c)}.notes-bottom>strong{color:#737f5c}
+.decorative-steps i{background:#b0bd83}.decorative-steps i:nth-child(2){background:#a3b579}.decorative-steps i:nth-child(3){background:#95ab6d}.decorative-steps i:nth-child(4){background:#819c60}.decorative-steps i:nth-child(5){background:#6d8957}
+.lesson-explanation{color:#59694a}.lesson-kana{color:#5c784e}.lesson-romaji,.example-romaji{color:#657751!important}.question-support,.guide-intro{color:#697955}.primary-button:active{box-shadow:0 2px 0 #34583b25}
