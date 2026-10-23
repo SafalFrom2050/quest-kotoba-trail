@@ -6,7 +6,7 @@
   "description": "A joyful Japanese-learning platformer starring Quest.",
   "scripts": {
     "start": "node server.mjs",
-    "check": "node --check src/main.mjs && node --check src/engine.mjs && node --check src/audio.mjs && node --check src/physics.mjs && node --check src/progress.mjs && node --check src/content.mjs && node --check src/worlds.mjs && node --check src/sprites.mjs && node --check src/low-poly.mjs && node --check src/countryside.mjs",
+    "check": "node --check src/main.mjs && node --check src/engine.mjs && node --check src/audio.mjs && node --check src/physics.mjs && node --check src/progress.mjs && node --check src/content.mjs && node --check src/worlds.mjs && node --check src/sprites.mjs && node --check src/low-poly.mjs && node --check src/countryside.mjs && node --check src/packs.mjs && node --check src/library-store.mjs && node --check src/library-ui.mjs",
     "test": "node --test"
   },
   "repository": {

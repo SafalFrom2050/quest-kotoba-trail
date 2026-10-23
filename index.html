@@ -9,6 +9,7 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect rx='18' width='64' height='64' fill='%236b8c57'/%3E%3Cpath d='M36 9 18 35h13l-4 21 21-29H34z' fill='%23fff4d6'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="countryside.css">
+  <link rel="stylesheet" href="custom-lessons.css">
 </head>
 <body class="is-title">
   <div class="app-shell">
@@ -25,6 +26,7 @@
       </nav>
     </header>
 
+    <div class="library-bar"><button class="outline-button" id="library-button">＋ My lessons</button><span>Bring your own lessons. Make them an adventure.</span></div>
     <main class="game-layout">
       <section class="stage-wrap" aria-label="Platform adventure">
         <div class="game-stage">
@@ -90,6 +92,7 @@
     <div class="lesson-topline"><span class="eyebrow" id="lesson-kind">KANJI SHRINE</span><span class="lesson-pause-label">Trail paused · take your time</span></div>
     <div class="lesson-word"><h2 id="lesson-title"></h2><span class="lesson-kana" id="lesson-kana"></span><span class="lesson-romaji" id="lesson-romaji"></span><strong id="lesson-meaning"></strong></div>
     <div class="lesson-language-row"><button class="language-button lesson-language-button" data-language-toggle aria-label="Learning hints: English. Switch to Nepalish.">Hints: English ⇄</button></div>
+    <p class="pack-small" id="lesson-language-note" hidden>English note shown; this lesson has no Nepalish version.</p>
     <div id="lesson-teach"><div class="memory-hook" id="lesson-hook"></div><p class="lesson-explanation" id="lesson-explanation"></p><div class="example-card"><span class="tiny-label">PUT IT TO WORK</span><p class="japanese-example" id="example-japanese" lang="ja"></p><p class="example-romaji" id="example-romaji"></p><p id="example-english"></p><button class="listen-button" id="listen-button" hidden>♪ Listen</button></div><button class="primary-button lesson-ready" id="ready-button">Try a quick challenge <span>→</span></button></div>
     <div id="lesson-quiz" hidden><span class="tiny-label">QUICK PRACTICE</span><h3 id="question-prompt"></h3><p class="question-context" id="question-context" lang="ja"></p><p class="example-romaji" id="question-romaji"></p><p class="question-support" id="question-support"></p><div class="answer-choices" id="answer-choices"></div><button class="hint-button" id="hint-button">↳ Peek at the memory note</button><p class="quiz-hint" id="quiz-hint" hidden></p><div class="answer-feedback" id="answer-feedback" hidden aria-live="polite"></div><button class="primary-button" id="continue-button" hidden>Got it. Let's jump! <span>→</span></button></div>
   </dialog>
@@ -97,8 +100,10 @@
   <dialog id="guide-dialog" class="guide-dialog" aria-labelledby="guide-title">
     <button class="dialog-close" id="close-guide-button" aria-label="Close field guide">×</button>
     <div class="eyebrow">COLLECT IDEAS, NOT JUST COINS</div><h2 id="guide-title">Quest's field guide</h2><p class="guide-intro">Useful kanji and grammar, ready whenever you need them. Practice stays in this browser.</p>
+    <button class="outline-button" id="guide-library-button">Open My Lessons →</button>
     <div class="guide-summary" id="guide-summary"></div><div class="guide-filters" id="guide-filters"><button data-filter="all" class="active">Everything</button><button data-filter="kanji">Kanji</button><button data-filter="grammar">Grammar</button><button data-filter="discovered">Discovered</button></div><div class="guide-grid" id="guide-grid"></div><div class="guide-footer"><span>After-lesson practice is recorded as supported practice.</span><button class="outline-button" id="export-button">Export practice log ↓</button></div>
   </dialog>
+  <dialog id="library-dialog" class="library-dialog" aria-labelledby="library-heading"></dialog>
   <div class="sr-only" id="announcer" aria-live="polite" aria-atomic="true"></div>
   <script type="module" src="src/main.mjs"></script>
 </body>

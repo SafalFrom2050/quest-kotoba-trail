@@ -8,15 +8,16 @@ const pixelFont = '"Yu Gothic", "Noto Sans JP", sans-serif';
 const UI_FONT = '"Segoe UI", sans-serif';
 
 export class GameEngine {
-  constructor(canvas, atlas, { onEvent = () => {}, pulse = () => 0, effects = true } = {}) {
+  constructor(canvas, atlas, { onEvent = () => {}, pulse = () => 0, effects = true, lookupLesson = findLesson } = {}) {
     this.canvas = canvas; this.ctx = canvas.getContext('2d'); this.atlas = atlas; this.onEvent = onEvent; this.pulse = pulse; this.effects = effects;
+    this.lookupLesson = lookupLesson;
     this.phase = 'title'; this.input = { left: false, right: false, jumpPressed: false, dashPressed: false };
     this.time = 0; this.lastFrame = 0; this.accumulator = 0; this.camera = { x: 0, y: 0 }; this.view = { w: 1280, h: 800 };
     this.particles = []; this.floaters = []; this.ghosts = []; this.shake = 0; this.hitStop = 0; this.flash = 0;
     this.animation = 'idle'; this.animationTime = 0; this.load('wordwood');
   }
   load(id) {
-    this.world = getWorld(id) || getWorld('wordwood'); this.player = createPlayer(this.world.spawn); this.player.y = 544;
+    this.world = typeof id === 'object' && id ? id : getWorld(id) || getWorld('wordwood'); this.player = createPlayer(this.world.spawn); this.player.y = 544;
     this.learned = new Set(); this.collected = new Set(); this.enemies = this.world.enemies.map((e,i) => ({ ...e, w: 38, h: 30, direction: i % 2 ? -1 : 1, alive: true }));
     this.score = 0; this.health = 3; this.combo = 0; this.bestCombo = 0; this.comboTime = 0; this.elapsed = 0; this.boost = 0;
     this.checkpoint = { x: this.world.spawn.x, y: 544 }; this.camera = { x: 0, y: 0 }; this.particles = []; this.floaters = []; this.ghosts = [];
@@ -27,12 +28,12 @@ export class GameEngine {
   clearInput() { this.input.left = this.input.right = this.input.jumpPressed = this.input.dashPressed = false; }
   snapshot() { return { world: this.world.id, score: this.score, health: this.health, coins: this.collected.size, totalCoins: this.world.coins.length, shrines: this.learned.size, combo: this.combo, bestCombo: this.bestCombo, time: this.elapsed, boost: this.boost }; }
   activePlatforms() { return this.world.platforms.filter(p => !p.gate || this.learned.has(p.gate)); }
-  lessonLookup(id) { return findLesson(id); }
+  lessonLookup(id) { return this.lookupLesson(id); }
   nearby() {
     const p = this.player; const center = p.x + p.w / 2;
     const shrine = this.world.shrines.find(s => Math.abs(center - s.x) < 95 && Math.abs(p.y + p.h - 600) < 155);
     if (shrine) return { type: 'shrine', ...shrine, solved: this.learned.has(shrine.lessonId) };
-    if (Math.abs(center - (this.world.portal.x + 46)) < 110) return { type: 'portal', ready: this.learned.size === 3 };
+    if (Math.abs(center - (this.world.portal.x + 46)) < 110) return { type: 'portal', ready: this.learned.size === this.world.shrines.length };
     return null;
   }
   interact() {
@@ -40,7 +41,7 @@ export class GameEngine {
     const target = this.nearby(); if (!target) return;
     if (target.type === 'shrine') this.onEvent('lesson', target);
     else if (target.ready) this.win();
-    else this.onEvent('toast', { message: `${3 - this.learned.size} lesson shrine${this.learned.size === 2 ? '' : 's'} still glowing. Follow their light!` });
+    else { const remaining = this.world.shrines.length - this.learned.size; this.onEvent('toast', { message: `${remaining} lesson shrine${remaining === 1 ? '' : 's'} still glowing. Follow their light!` }); }
   }
   learn(id) {
     const shrine = this.world.shrines.find(s => s.lessonId === id); if (!shrine) return;
@@ -51,7 +52,7 @@ export class GameEngine {
     this.flash = this.effects ? .1 : 0; this.shake = this.effects ? .15 : 0;
     this.onEvent('learned', { id, fresh, ...this.snapshot() });
   }
-  win() { if (this.phase !== 'playing' || this.learned.size !== 3) return; this.phase = 'win'; this.clearInput(); this.burst(this.player.x, this.player.y - 20, 140, ['#7af5cf','#ffe49b','#9ac4ff','#ffffff']); this.onEvent('win', this.snapshot()); }
+  win() { if (this.phase !== 'playing' || this.learned.size !== this.world.shrines.length) return; this.phase = 'win'; this.clearInput(); this.burst(this.player.x, this.player.y - 20, 140, ['#7af5cf','#ffe49b','#9ac4ff','#ffffff']); this.onEvent('win', this.snapshot()); }
   damage(reason = 'slime', fromX = this.player.x) {
     const p = this.player; if (p.invulnerable > 0 && reason !== 'fall') return;
     this.health--; this.combo = 0; this.comboTime = 0; this.boost = 0;
@@ -101,7 +102,7 @@ export class GameEngine {
       else this.damage('slime', e.x + 19);
     }
     for (const h of this.world.hazards) if (overlaps(p,h)) this.damage('hazard',h.x + h.w / 2);
-    if (this.learned.size === 3 && overlaps(p,this.world.portal)) this.win();
+    if (this.learned.size === this.world.shrines.length && overlaps(p,this.world.portal)) this.win();
     const desired = clamp(p.x - this.view.w * (p.direction < 0 ? .53 : .34), 0, Math.max(0,this.world.width - this.view.w));
     this.camera.x += (desired - this.camera.x) * Math.min(1,dt * 7);
     this.camera.y += (clamp(p.y + 20 - this.view.h * .6,0,Math.max(0,780-this.view.h)) - this.camera.y) * Math.min(1,dt * 6);

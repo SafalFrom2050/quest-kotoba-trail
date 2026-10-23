@@ -1,5 +1,34 @@
 # Validation notes
 
+## Custom lesson packs — 2026-10-23
+
+- All source syntax checks and 36 Node tests passed. New checks cover bounded
+  packet parsing, versions, required fields, answer indices, duplicate choices,
+  unknown-field removal, unique IDs, revision history, map/bridge remapping,
+  serialized saves, quota failures, recoverable removal, and backup restoration.
+- Local browser QA generated and copied a prompt with N4, grammar, a custom
+  topic, and Nepalish selected. Invalid packets showed field errors and produced
+  a repair prompt. The sample opened a 153-field editable preview; edited text
+  was saved to real IndexedDB and remained after a reload.
+- A deliberate wrong answer, retry, and correct answer were recorded separately.
+  A custom trail launched, its first shrine opened the imported lesson, and
+  solving it updated the HUD to 1/3 and opened the lesson bridge. Node checks
+  covered all three remapped gates and single victory emission on every map.
+- A real browser download contained the custom pack and its three recorded
+  attempts. The JSON file was imported through the file chooser into an empty
+  library on another local origin; all three attempts and the discovery returned.
+- Editing a saved pack created revision 2 with fresh practice. Recoverable
+  removal and restoration worked. Optional Nepalish notes displayed when
+  supplied; English-only lessons explained their fallback and used English
+  language attributes.
+- Mobile library, lesson, and editable-preview widths were inspected at 390px
+  and 320px. No horizontal overflow was observed. Desktop flows were also
+  inspected. Physical phones and a manual complete run of every map were not
+  tested.
+- The built-in field guide still contained all 13 original lessons with zero
+  discoveries and zero attempts after custom study. No browser warnings or
+  errors were observed. QA used separate localStorage and IndexedDB namespaces.
+
 ## Learning hint language — 2026-10-23
 
 - JavaScript syntax checks and all 18 Node tests passed. New checks cover old-save

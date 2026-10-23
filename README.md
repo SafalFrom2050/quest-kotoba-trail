@@ -84,6 +84,38 @@ camera-dependent changes in viewing angle. Quest, terrain decoration, enemies,
 and the side-scrolling gameplay remain 2D. There is no extra download or engine
 dependency. Motion/FX settings freeze decorative rotations and drifting details.
 
+## Bring your own lessons
+
+Open **＋ My lessons** above the trail to create a personal lesson library:
+
+1. Choose **Create a prompt**, set a JLPT level, focus, and topic, and copy the
+   prompt into any AI chatbot. Nepalish memory notes are optional.
+2. Paste the complete response under **Import & review**, or choose its JSON file.
+   The importer checks the format and identifies fields that need fixing.
+   **Copy repair prompt** gives your chatbot the specific corrections to make.
+3. Review and edit the Japanese, readings, examples, memory notes, and answer
+   keys, then choose **Save to My Lessons**.
+4. Study individual lessons, or select some scenery and **Play pack**. The three
+   imported lessons become the shrines and unlockable bridges of that trail.
+
+Each pack contains **three lessons with three questions each**. Custom lessons
+and practice are stored in this browser's IndexedDB, separately from the built-in
+campaign. The game makes no AI API calls and requires no API key.
+
+Use **Export lessons** to share a packet without personal progress. Use **Back up
+my library** to export packs and practice history; restore that file through
+**Import & review**. Matching existing packs are kept unchanged. Browser data can
+be cleared and does not automatically sync across devices, so keep a backup.
+
+You can edit saved packs. Changed content starts a new practice revision while
+earlier history remains in your backup. **Remove** is recoverable through **Show
+removed packs**. English-only packs use English notes in either language mode,
+with an explanation when a Nepalish note is unavailable.
+
+Try the in-game example or download the [sample lesson packet](docs/examples/workplace-pack.json).
+See the [packet format and library guide](docs/custom-lessons.md). Imported text
+is displayed as text. Format validation does not verify Japanese accuracy.
+
 ## Sound and visual feedback
 
 Web Audio synthesizes a 148-BPM chiptune loop, jump sweeps, dash sounds,
@@ -119,6 +151,10 @@ mastery. Game practice stays separate from any external study log.
 - `src/countryside.mjs`: fields, trees, village scenery and landscape themes.
 - `countryside.css`: warm countryside interface colors.
 - `src/progress.mjs`: local practice data.
+- `src/packs.mjs`: packet validation, chatbot prompts, revisions, and custom trails.
+- `src/library-store.mjs`: IndexedDB library and separate custom practice.
+- `src/library-ui.mjs`: prompt, import, editing, library, and export interfaces.
+- `custom-lessons.css`: responsive My Lessons interface.
 - `assets/`: the original Quest sprite atlas and provenance.
 - `docs/`: content boundaries and validation notes.
 

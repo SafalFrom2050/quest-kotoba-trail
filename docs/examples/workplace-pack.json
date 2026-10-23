@@ -1,0 +1,261 @@
+{
+  "format": "quest-lesson-pack",
+  "version": 1,
+  "title": "Workplace word connections",
+  "description": "A sample pack about discussion and connections at work.",
+  "level": "N3",
+  "lessons": [
+    {
+      "kind": "kanji",
+      "title": "議",
+      "kana": "ぎ",
+      "romaji": "gi",
+      "meaning": "Deliberation / discussion / debate",
+      "hook": {
+        "en": "Picture Quest at a meeting table, discussing ideas with the team. Link 議 and its reading gi to discussion."
+      },
+      "explanation": "議 carries the idea of discussing or deliberating. Its reading in these compounds is gi: 会議 (kaigi) is a meeting, 議論 (giron) is discussion or debate, and 議員 (giin) is an assembly member. The kanji gives a shared idea; the whole compound gives the specific meaning. The meeting-table picture is a memory aid, not a historical explanation of the kanji.",
+      "examples": [
+        {
+          "japanese": "会議で安全について議論します。",
+          "romaji": "Kaigi de anzen ni tsuite giron shimasu.",
+          "english": "We discuss safety at the meeting."
+        }
+      ],
+      "questions": [
+        {
+          "prompt": "In 会議 (kaigi), which sound belongs to 議?",
+          "context": "",
+          "romaji": "",
+          "choices": [
+            {
+              "text": "gi",
+              "note": ""
+            },
+            {
+              "text": "ron",
+              "note": ""
+            },
+            {
+              "text": "min",
+              "note": ""
+            }
+          ],
+          "answer": 0,
+          "why": "会議 is kai + gi. 議 is read gi here; ron belongs to 論, and min belongs to 民.",
+          "support": {
+            "en": "会 is read kai. Now choose the sound of the remaining kanji."
+          }
+        },
+        {
+          "prompt": "Quest and the team gather at a table to discuss tomorrow’s schedule. Which word names that meeting?",
+          "context": "",
+          "romaji": "",
+          "choices": [
+            {
+              "text": "環境 — kankyou",
+              "note": "environment"
+            },
+            {
+              "text": "会議 — kaigi",
+              "note": "meeting"
+            },
+            {
+              "text": "病気 — byouki",
+              "note": "illness"
+            }
+          ],
+          "answer": 1,
+          "why": "会議 means a meeting. 環境 describes an environment, and 病気 means illness."
+        },
+        {
+          "prompt": "What are they doing in this sentence?",
+          "context": "会議で安全について議論します。",
+          "romaji": "Kaigi de anzen ni tsuite giron shimasu.",
+          "choices": [
+            {
+              "text": "Repairing a broken switch",
+              "note": ""
+            },
+            {
+              "text": "Curing an illness",
+              "note": ""
+            },
+            {
+              "text": "Discussing safety at a meeting",
+              "note": ""
+            }
+          ],
+          "answer": 2,
+          "why": "会議で gives the setting, “at the meeting”; 安全について gives the topic, “about safety”; 議論します means “discuss/debate.”"
+        }
+      ]
+    },
+    {
+      "kind": "kanji",
+      "title": "論",
+      "kana": "ろん",
+      "romaji": "ron",
+      "meaning": "Argument / discussion / reasoning",
+      "hook": {
+        "en": "Quest gives reasons for an idea instead of simply stating it. Link 論, ron, to a notebook full of reasoning and discussion."
+      },
+      "explanation": "論 often appears in compounds about reasoning, discussion, or written arguments. 議論 (giron) is a discussion or debate, 論文 (ronbun) is a research paper or thesis, and 結論 (ketsuron) is a conclusion. In all three, 論 is read ron. The word 論文 refers to a written work; it does not mean every kind of research activity.",
+      "examples": [
+        {
+          "japanese": "会議で改善案を議論します。",
+          "romaji": "Kaigi de kaizen-an o giron shimasu.",
+          "english": "We discuss a proposal for improvement at the meeting."
+        }
+      ],
+      "questions": [
+        {
+          "prompt": "In 議論 (giron), how is 論 read?",
+          "context": "",
+          "romaji": "",
+          "choices": [
+            {
+              "text": "gi",
+              "note": ""
+            },
+            {
+              "text": "ron",
+              "note": ""
+            },
+            {
+              "text": "kei",
+              "note": ""
+            }
+          ],
+          "answer": 1,
+          "why": "議論 is gi + ron. 議 contributes gi, and 論 contributes ron."
+        },
+        {
+          "prompt": "Quest needs to read a published research paper. Which item should he pick up?",
+          "context": "",
+          "romaji": "",
+          "choices": [
+            {
+              "text": "論文 — ronbun",
+              "note": ""
+            },
+            {
+              "text": "米 — kome",
+              "note": ""
+            },
+            {
+              "text": "時計 — tokei",
+              "note": ""
+            }
+          ],
+          "answer": 0,
+          "why": "論文 is a research paper or thesis. 米 is rice, and 時計 is a clock or watch."
+        },
+        {
+          "prompt": "After comparing the ideas, what will Quest explain?",
+          "context": "結論を説明します。",
+          "romaji": "Ketsuron o setsumei shimasu.",
+          "choices": [
+            {
+              "text": "The surrounding environment",
+              "note": ""
+            },
+            {
+              "text": "A treatment for illness",
+              "note": ""
+            },
+            {
+              "text": "The conclusion",
+              "note": ""
+            }
+          ],
+          "answer": 2,
+          "why": "結論 means conclusion, and 説明します means explain. The sentence says “I will explain the conclusion.”"
+        }
+      ]
+    },
+    {
+      "kind": "kanji",
+      "title": "関係",
+      "kana": "かんけい",
+      "romaji": "kankei",
+      "meaning": "Relation / relationship / connection",
+      "hook": {
+        "en": "Quest checks the connection between two gears: 関係, kankei. The surrounding workshop is the environment: 環境, kankyou. Keep the two readings distinct."
+      },
+      "explanation": "関係 (kankei) means a relation, relationship, or connection. Here 関 is kan and 係 is kei. 環境 (kankyou) means environment: its surroundings, conditions, or setting. Use ～に関係があります to say something is related to something else. A temperature-related problem uses 関係; lighting and ventilation are part of the 作業環境 (sagyou kankyou), the working environment.",
+      "examples": [
+        {
+          "japanese": "この問題は温度に関係があります。",
+          "romaji": "Kono mondai wa ondo ni kankei ga arimasu.",
+          "english": "This problem is related to temperature."
+        }
+      ],
+      "questions": [
+        {
+          "prompt": "Which reading matches 関係?",
+          "context": "",
+          "romaji": "",
+          "choices": [
+            {
+              "text": "kankyou",
+              "note": ""
+            },
+            {
+              "text": "ketsuron",
+              "note": ""
+            },
+            {
+              "text": "kankei",
+              "note": ""
+            }
+          ],
+          "answer": 2,
+          "why": "関係 is kankei: 関 = kan and 係 = kei. The similar-sounding kankyou is 環境, environment."
+        },
+        {
+          "prompt": "The error is related to temperature. Complete the sentence.",
+          "context": "このエラーは温度に ___ があります。",
+          "romaji": "Kono eraa wa ondo ni ___ ga arimasu.",
+          "choices": [
+            {
+              "text": "関係 — kankei",
+              "note": ""
+            },
+            {
+              "text": "環境 — kankyou",
+              "note": ""
+            },
+            {
+              "text": "論文 — ronbun",
+              "note": ""
+            }
+          ],
+          "answer": 0,
+          "why": "温度に関係があります means “is related to temperature.” 環境 is the environment; 論文 is a research paper."
+        },
+        {
+          "prompt": "Quest improves the workshop’s lighting and ventilation. Which word describes the working environment?",
+          "context": "作業 ___ を改善します。",
+          "romaji": "Sagyou ___ o kaizen shimasu.",
+          "choices": [
+            {
+              "text": "結論 — ketsuron",
+              "note": ""
+            },
+            {
+              "text": "環境 — kankyou",
+              "note": ""
+            },
+            {
+              "text": "病気 — byouki",
+              "note": ""
+            }
+          ],
+          "answer": 1,
+          "why": "作業環境 means the working environment. Lighting and ventilation are environmental conditions. 結論 is a conclusion and 病気 is illness."
+        }
+      ]
+    }
+  ]
+}
