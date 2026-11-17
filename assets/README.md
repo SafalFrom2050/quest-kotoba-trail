@@ -12,6 +12,9 @@ at runtime.
 - SHA256: `f6bcd7ddccc152392203cb35ac527cae8a688a3a9bd6cfc15e01661bb5b8615d`.
 - Grid: 8 columns × 11 rows, with 192 × 208 pixel cells.
 
+The Quest sprite atlas is outside the scope of the game's
+[MIT license](../README.md#license).
+
 ## Source atlas mapping
 
 Rows and columns below are zero based. Empty cells stay unused.

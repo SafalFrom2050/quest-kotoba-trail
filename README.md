@@ -18,6 +18,14 @@ Japanese corrections, lesson ideas, accessibility improvements, and bug fixes
 are welcome. See the [contribution guide](CONTRIBUTING.md) to get started or
 [open an issue](https://github.com/SafalFrom2050/quest-kotoba-trail/issues/new).
 
+## License
+
+The game source code and tests are licensed under the [MIT License](LICENSE).
+Quest artwork, including the [sprite atlas](assets/README.md) and
+[screenshots](docs/screenshots/), is outside the MIT grant. The Japanese lesson
+text and [example lesson pack](docs/examples/workplace-pack.json) are also
+outside the grant.
+
 ## Play locally
 
 Requires Node.js 18 or newer. There are **no packages to install**.
