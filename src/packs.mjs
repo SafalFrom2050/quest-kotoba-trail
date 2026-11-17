@@ -141,6 +141,7 @@ export function validateStoredPack(value) {
   for (let revision = 1; revision <= value.revision; revision++) {
     if (!own(value.history || {}, revision) && revision !== value.revision) continue;
     const progress = normalizeProgress(value.history?.[revision]);
+    progress.stamps = [];
     const prefix = `${value.id}@${revision}:l`;
     const ids = [1, 2, 3].map(i => prefix + i);
     progress.discovered = progress.discovered.filter(id => ids.includes(id));
@@ -165,6 +166,7 @@ export function makePracticeWorld(record, theme = 'wordwood') {
   const template = getWorld(theme);
   if (!template) throw new PacketError(['Choose a valid practice trail.']);
   const world = structuredClone(template), lessons = packLessons(record);
+  delete world.waterwheel; // Campaign side quests are separate from custom lesson runs.
   const remap = new Map(template.shrines.map((shrine, i) => [shrine.lessonId, lessons[i].id]));
   world.name = record.packet.title; world.kicker = 'MY LESSONS';
   world.subtitle = `${record.packet.level} · Your lesson pack on ${template.name}.`;

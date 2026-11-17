@@ -1,5 +1,20 @@
 # Validation notes
 
+## The Broken Waterwheel — 2026-11-17
+
+- All 47 Node tests and source syntax checks passed. The added checks cover
+  first-contact landing, spring boosts, one-way moving-platform landings,
+  stepping and jumping off the lift, its ascent/descent and pause behavior, and
+  dashing across all nine unlocked campaign bridges.
+- Browser QA used normal controls to walk to the mill keeper, try the wrong
+  tool, switch between English and Nepalish hints, repair the wheel, ride
+  the lift, and jump to the loft. The Mill Stamp survived a reload; campaign
+  shrine and practice counts stayed unchanged. The puzzle also fit at a 390px
+  viewport with both tool buttons visible. Physical phones were not tested.
+- Player speed, jump strength, dash timing, and campaign platform geometry
+  were kept. Tests confirmed that Windmill Village is completable without
+  the repair and that custom packs do not get campaign-specific content.
+
 ## Custom lesson packs — 2026-10-23
 
 - All source syntax checks and 36 Node tests passed. New checks cover bounded

@@ -1,12 +1,15 @@
+import { MILL_STAMP } from './waterwheel.mjs';
+
 export const STORAGE_KEY = 'quest-kotoba-trail.v1';
 export const DEFAULT_PREFERENCES = Object.freeze({ music: true, sound: true, effects: true, language: 'en' });
-export function freshProgress() { return { version: 1, attempts: [], discovered: [], worlds: {}, preferences: { ...DEFAULT_PREFERENCES }, lastWorld: 'wordwood' }; }
+export function freshProgress() { return { version: 1, attempts: [], discovered: [], worlds: {}, stamps: [], preferences: { ...DEFAULT_PREFERENCES }, lastWorld: 'wordwood' }; }
 export function normalizeProgress(value) {
   const result = freshProgress();
   if (!value || value.version !== 1) return result;
   result.attempts = Array.isArray(value.attempts) ? value.attempts.filter(a => a && typeof a.lessonId === 'string' && typeof a.correct === 'boolean').slice(-2000) : [];
   result.discovered = Array.isArray(value.discovered) ? [...new Set(value.discovered.filter(id => typeof id === 'string'))] : [];
   result.worlds = value.worlds && typeof value.worlds === 'object' && !Array.isArray(value.worlds) ? { ...value.worlds } : {};
+  if (Array.isArray(value.stamps) && value.stamps.includes(MILL_STAMP)) result.stamps.push(MILL_STAMP);
   for (const key of ['music', 'sound', 'effects']) if (typeof value.preferences?.[key] === 'boolean') result.preferences[key] = value.preferences[key];
   if (['en', 'ne'].includes(value.preferences?.language)) result.preferences.language = value.preferences.language;
   if (['wordwood', 'workshop', 'sky'].includes(value.lastWorld)) result.lastWorld = value.lastWorld;
@@ -27,6 +30,10 @@ export class ProgressStore {
   constructor(storage, key = STORAGE_KEY) { this.storage = storage; this.key = key; this.available = Boolean(storage); this.value = freshProgress(); try { this.value = normalizeProgress(JSON.parse(storage?.getItem(this.key) || 'null')); } catch { this.available = false; } }
   save() { try { this.storage?.setItem(this.key, JSON.stringify(this.value)); } catch { this.available = false; } return this.value; }
   attempt(value) { this.value = recordAttempt(this.value, value); return this.save(); }
+  awardMillStamp() {
+    if (this.value.stamps.includes(MILL_STAMP)) return;
+    this.value.stamps.push(MILL_STAMP); this.save();
+  }
   setPreference(key, value) {
     if (key === 'language') {
       if (value === 'en' || value === 'ne') this.value.preferences.language = value;

@@ -1,7 +1,8 @@
 import { createPlayer, stepPlayer, overlaps, clamp } from './physics.mjs';
 import { getWorld } from './worlds.mjs';
 import { findLesson } from './content.mjs';
-import { drawCountryside, drawCountryWater, drawCountryPlatform, drawCountryShrine, drawCountryPortal } from './countryside.mjs';
+import { drawCountryside, drawCountryWater, drawCountryPlatform, drawCountryShrine, drawCountryPortal, drawCountryWaterwheel } from './countryside.mjs';
+import { MILL_STAMP, createWaterwheel, advanceWaterwheel } from './waterwheel.mjs';
 
 const rand = (min, max) => min + Math.random() * (max - min);
 const pixelFont = '"Yu Gothic", "Noto Sans JP", sans-serif';
@@ -18,6 +19,7 @@ export class GameEngine {
   }
   load(id) {
     this.world = typeof id === 'object' && id ? id : getWorld(id) || getWorld('wordwood'); this.player = createPlayer(this.world.spawn); this.player.y = 544;
+    this.waterwheel = createWaterwheel(this.world.waterwheel);
     this.learned = new Set(); this.collected = new Set(); this.enemies = this.world.enemies.map((e,i) => ({ ...e, w: 38, h: 30, direction: i % 2 ? -1 : 1, alive: true }));
     this.score = 0; this.health = 3; this.combo = 0; this.bestCombo = 0; this.comboTime = 0; this.elapsed = 0; this.boost = 0;
     this.checkpoint = { x: this.world.spawn.x, y: 544 }; this.camera = { x: 0, y: 0 }; this.particles = []; this.floaters = []; this.ghosts = [];
@@ -27,12 +29,18 @@ export class GameEngine {
   setPhase(phase) { this.phase = phase; this.clearInput(); }
   clearInput() { this.input.left = this.input.right = this.input.jumpPressed = this.input.dashPressed = false; }
   snapshot() { return { world: this.world.id, score: this.score, health: this.health, coins: this.collected.size, totalCoins: this.world.coins.length, shrines: this.learned.size, combo: this.combo, bestCombo: this.bestCombo, time: this.elapsed, boost: this.boost }; }
-  activePlatforms() { return this.world.platforms.filter(p => !p.gate || this.learned.has(p.gate)); }
+  activePlatforms() {
+    const platforms = this.world.platforms.filter(p => !p.gate || this.learned.has(p.gate));
+    if (this.waterwheel?.repaired) platforms.push(this.waterwheel.lift, this.waterwheel.site.loft);
+    return platforms;
+  }
   lessonLookup(id) { return this.lookupLesson(id); }
   nearby() {
     const p = this.player; const center = p.x + p.w / 2;
     const shrine = this.world.shrines.find(s => Math.abs(center - s.x) < 95 && Math.abs(p.y + p.h - 600) < 155);
     if (shrine) return { type: 'shrine', ...shrine, solved: this.learned.has(shrine.lessonId) };
+    if (this.waterwheel && !this.waterwheel.repaired && Math.abs(center - this.waterwheel.site.x) < 74 &&
+        Math.abs(p.y + p.h - 600) < 105) return { type: 'waterwheel' };
     if (Math.abs(center - (this.world.portal.x + 46)) < 110) return { type: 'portal', ready: this.learned.size === this.world.shrines.length };
     return null;
   }
@@ -40,8 +48,27 @@ export class GameEngine {
     if (this.phase !== 'playing') return;
     const target = this.nearby(); if (!target) return;
     if (target.type === 'shrine') this.onEvent('lesson', target);
+    else if (target.type === 'waterwheel') this.onEvent('waterwheel');
     else if (target.ready) this.win();
     else { const remaining = this.world.shrines.length - this.learned.size; this.onEvent('toast', { message: `${remaining} lesson shrine${remaining === 1 ? '' : 's'} still glowing. Follow their light!` }); }
+  }
+  chooseWaterwheelTool(tool) {
+    if (this.phase !== 'side-quest' || this.nearby()?.type !== 'waterwheel') return null;
+    if (tool === 'medicine') return 'retry';
+    if (tool !== 'wrench') return null;
+    const state = this.waterwheel;
+    state.repaired = true;
+    this.burst(state.site.wheelX, 546, 40, ['#fff2c0', '#6eab91', '#d0ebc0']);
+    return 'repaired';
+  }
+  collectMillStamp() {
+    const state = this.waterwheel;
+    if (!state?.repaired || state.collected || !overlaps(this.player, state.site.prize)) return;
+    state.collected = true; this.score += 300;
+    const { x, y, w } = state.site.prize;
+    this.burst(x + w / 2, y, 40, ['#ffe9a0', '#a6d3ab', '#fff4cc']);
+    this.float(x + w / 2, y - 15, '+300 · MILL STAMP', '#684a2a', 2.2);
+    this.onEvent('stamp', { id: MILL_STAMP });
   }
   learn(id) {
     const shrine = this.world.shrines.find(s => s.lessonId === id); if (!shrine) return;
@@ -56,9 +83,9 @@ export class GameEngine {
   damage(reason = 'slime', fromX = this.player.x) {
     const p = this.player; if (p.invulnerable > 0 && reason !== 'fall') return;
     this.health--; this.combo = 0; this.comboTime = 0; this.boost = 0;
-    p.invulnerable = 1.5; p.vx = p.x < fromX ? -290 : 290; p.vy = -380;
+    p.invulnerable = 1.5; p.vx = p.x < fromX ? -290 : 290; p.vy = -380; p.grounded = false; p.support = null;
     this.shake = this.effects ? .22 : 0; this.burst(p.x + 17, p.y + 25, 14, ['#ffa8bc','#ffc875']);
-    if (reason === 'fall' || this.health <= 0) { p.x = this.checkpoint.x; p.y = this.checkpoint.y; p.vx = 0; p.vy = 0; p.dashTimer = 0; p.jumps = 0; this.score = Math.max(0, this.score - 50); if (this.health <= 0) this.health = 3; this.camera.x = clamp(p.x - this.view.w * .3, 0, this.world.width - this.view.w); this.onEvent('toast', { message: 'A small reset. Your discoveries stay lit—try that jump again.' }); }
+    if (reason === 'fall' || this.health <= 0) { p.x = this.checkpoint.x; p.y = this.checkpoint.y; p.vx = 0; p.vy = 0; p.dashTimer = 0; p.jumps = 0; p.coyote = 0; p.jumpBuffer = 0; this.score = Math.max(0, this.score - 50); if (this.health <= 0) this.health = 3; this.camera.x = clamp(p.x - this.view.w * .3, 0, this.world.width - this.view.w); this.onEvent('toast', { message: 'A small reset. Your discoveries stay lit—try that jump again.' }); }
     this.onEvent('hurt', this.snapshot());
   }
   float(x, y, text, color = '#fff4b7', duration = 1.05) { this.floaters.push({ x, y, text, color, life: duration, max: duration }); }
@@ -78,6 +105,7 @@ export class GameEngine {
     if (!this.comboTime) this.combo = 0;
     if (this.hitStop > 0) { this.hitStop -= dt; return; }
     const p = this.player;
+    advanceWaterwheel(this.waterwheel, dt, p.grounded && p.support === this.waterwheel?.lift);
     const events = stepPlayer(p, this.input, this.activePlatforms(), dt); this.input.jumpPressed = this.input.dashPressed = false;
     p.x = clamp(p.x, 0, this.world.width - p.w);
     for (const event of events) {
@@ -102,6 +130,7 @@ export class GameEngine {
       else this.damage('slime', e.x + 19);
     }
     for (const h of this.world.hazards) if (overlaps(p,h)) this.damage('hazard',h.x + h.w / 2);
+    this.collectMillStamp();
     if (this.learned.size === this.world.shrines.length && overlaps(p,this.world.portal)) this.win();
     const desired = clamp(p.x - this.view.w * (p.direction < 0 ? .53 : .34), 0, Math.max(0,this.world.width - this.view.w));
     this.camera.x += (desired - this.camera.x) * Math.min(1,dt * 7);
@@ -129,6 +158,7 @@ export class GameEngine {
     const jitter = this.effects && this.shake > 0 ? this.shake * 14 : 0;
     ctx.translate(-Math.round(this.camera.x) + rand(-jitter,jitter), -Math.round(this.camera.y) + rand(-jitter,jitter));
     this.drawWater(ctx,W,H);
+    if (this.waterwheel) drawCountryWaterwheel(ctx, this.waterwheel, this);
     for (const platform of this.world.platforms) this.drawPlatform(ctx,platform);
     for (const coin of this.world.coins) if (!this.collected.has(coin.id) && this.visible(coin.x,24)) this.drawCoin(ctx,coin);
     for (const shrine of this.world.shrines) this.drawShrine(ctx,shrine);
@@ -148,7 +178,7 @@ export class GameEngine {
     if(this.phase==='playing')this.drawWaypoint(ctx,W,H);
   }
   visible(x,w=80){return x+w>this.camera.x-80&&x<this.camera.x+this.view.w+80;}
-  background(ctx,W,H){drawCountryside(ctx,{worldId:this.world.id,W,H,camera:this.camera,time:this.time,motion:this.effects,pulse:this.pulse()});}
+  background(ctx,W,H){drawCountryside(ctx,{worldId:this.world.id,W,H,camera:this.camera,time:this.time,motion:this.effects,pulse:this.pulse(),foregroundMill:Boolean(this.waterwheel)});}
   drawWater(ctx){drawCountryWater(ctx,this);}
   drawPlatform(ctx,p){drawCountryPlatform(ctx,p,this);}
   drawCoin(ctx,coin){const y=coin.y+Math.sin(this.time*3+coin.x)*3;ctx.save();ctx.translate(coin.x,y);ctx.fillStyle='#f9d478';ctx.beginPath();ctx.moveTo(0,-12);ctx.lineTo(9,-6);ctx.lineTo(12,3);ctx.lineTo(0,13);ctx.lineTo(-12,3);ctx.lineTo(-9,-6);ctx.closePath();ctx.fill();ctx.fillStyle='#694f29';ctx.font=`600 13px ${pixelFont}`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(coin.glyph,0,1);ctx.restore();}

@@ -44,7 +44,7 @@ function riceFields(ctx,W,base,camera,theme){
     for(let x=-(offset%32);x<W+40;x+=32){const sy=y+12-x/W*28;ctx.fillRect(x,sy-6,2,8);ctx.fillRect(x-3,sy-4,2,4);ctx.fillRect(x+4,sy-5,2,5);}
   }
 }
-export function drawCountryside(ctx,{worldId,W,H,camera,time,motion,pulse=0}){
+export function drawCountryside(ctx,{worldId,W,H,camera,time,motion,pulse=0,foregroundMill=false}){
   const theme=COUNTRY_THEMES[worldId]||COUNTRY_THEMES.wordwood;
   const gradient=ctx.createLinearGradient(0,0,0,H);gradient.addColorStop(0,theme.sky[0]);gradient.addColorStop(1,theme.sky[1]);ctx.fillStyle=gradient;ctx.fillRect(0,0,W,H);
   const sunX=W*.79-camera.x*.025,sunY=H*.19;
@@ -57,7 +57,7 @@ export function drawCountryside(ctx,{worldId,W,H,camera,time,motion,pulse=0}){
   for(let i=-1;i<Math.ceil(W/690)+2;i++){
     const index=i+Math.floor(camera.x*.43/690),x=i*690-(camera.x*.43)%690+345;
     if(x < -260 || x > W+260)continue;
-    const kind=worldId==='workshop'?(index%2===0?'windmill':'mill'):worldId==='wordwood'&&index%3===1?'windmill':index%2?'cottage-red':'cottage',scale=kind==='mill'?1.1:kind==='windmill'?.93:.95;
+    const kind=worldId==='workshop'?(index%2===0?'windmill':foregroundMill?'cottage-red':'mill'):worldId==='wordwood'&&index%3===1?'windmill':index%2?'cottage-red':'cottage',scale=kind==='mill'?1.1:kind==='windmill'?.93:.95;
     ellipse(ctx,x+15,base+4,99*scale,9,'#445f4121');
     const yaw=.32+Math.max(-.12,Math.min(.12,(W*.5-x)/W*.2));
     drawProp(ctx,kind,{x,y:base,scale,yaw});
@@ -120,12 +120,65 @@ export function drawCountryShrine(ctx,s,engine){
   ctx.save();ctx.textAlign='center';ctx.textBaseline='middle';ctx.font=`600 26px ${font}`;ctx.fillStyle='#3d584a';ctx.fillText(label,s.x+center.x,y+center.y);
   ctx.font='700 10px "Segoe UI",sans-serif';ctx.fillStyle='#3b5545';ctx.fillText(solved?'✓ DISCOVERED':'LESSON',s.x,y-129);ctx.restore();
 }
+function drawMillKeeper(ctx,x,y){
+  ellipse(ctx,x,y+1,15,3,'#4c60462b');
+  ctx.fillStyle='#5f5744';ctx.fillRect(x-8,y-13,6,13);ctx.fillRect(x+2,y-13,6,13);
+  ctx.fillStyle='#586e62';ctx.fillRect(x-11,y-28,22,19);
+  ctx.fillStyle='#e6d0a0';ctx.fillRect(x-6,y-23,12,15);
+  ctx.fillStyle='#bd8c69';ctx.fillRect(x-12,y-19,5,6);ctx.fillRect(x+7,y-19,5,6);
+  ctx.fillStyle='#d7aa83';ctx.fillRect(x-8,y-40,16,14);
+  ctx.fillStyle='#634f3c';ctx.fillRect(x-4,y-36,2,3);ctx.fillRect(x+3,y-36,2,3);
+  ctx.fillStyle='#b18c59';ctx.fillRect(x-13,y-42,26,5);ctx.fillRect(x-8,y-47,16,6);
+}
+export function drawCountryWaterwheel(ctx,state,engine){
+  const { site, lift, repaired, collected, spin } = state;
+  if(!engine.visible(lift.x-15, site.wheelX-lift.x+105))return;
+  const { loft, prize } = site;
+  // This scenery is anchored to the stage rather than the parallax layer.
+  drawProp(ctx,'mill',{x:884,y:599,scale:.88,yaw:.29});
+  ellipse(ctx,site.wheelX,598,52,7,repaired?'#78aaa9':'#8a9e71');
+  const wheelSpin=repaired?(engine.effects?spin:1.1):.32;
+  drawMesh(ctx,getProp('wheel'),{x:site.wheelX,y:548,scale:.79,yaw:.22,spin:wheelSpin});
+  if(repaired){
+    ctx.fillStyle='#dbf2d8';
+    const ripple=engine.effects?9*Math.cos(spin*2):0;
+    ctx.fillRect(site.wheelX-31+ripple,593,21,3);
+    ctx.fillRect(site.wheelX+2-ripple,597,26,2);
+  }
+  ctx.fillStyle='#816644';
+  ctx.fillRect(lift.x-7,loft.y-8,7,278);ctx.fillRect(lift.x+lift.w,loft.y-8,7,278);
+  ctx.fillRect(lift.x-12,loft.y-8,lift.w+24,10);
+  ctx.fillStyle='#cfad75';ctx.fillRect(lift.x-5,loft.y+2,2,262);ctx.fillRect(lift.x+lift.w+2,loft.y+2,2,262);
+  if(repaired){
+    ctx.fillStyle='#615636';
+    for(const x of [lift.x+7,lift.x+lift.w-9])ctx.fillRect(x,loft.y+2,2,lift.y-loft.y-2);
+    drawRaisedPlatform(ctx,loft,{bridge:true});
+    drawRaisedPlatform(ctx,lift,{bridge:true});
+    ctx.fillStyle='#e4c178';
+    ctx.fillRect(lift.x+8,lift.y+6,lift.w-16,4);
+    const { x,y,w,h }=prize;
+    ctx.fillStyle='#785736';ctx.fillRect(x+2,y+11,w-4,h-11);
+    ctx.fillStyle='#d5a151';ctx.fillRect(x,y+(collected?13:9),w,collected?5:11);
+    ctx.fillStyle='#ffdf8d';ctx.fillRect(x+17,y+15,8,9);
+    if(!collected){ctx.fillStyle='#fff1af';ctx.fillRect(x+19,y-8,4,13);ctx.fillRect(x+15,y-4,12,4);}
+  }else{
+    ctx.fillStyle='#978260';ctx.fillRect(lift.x+3,lift.y+20,lift.w-6,2);
+  }
+  drawMillKeeper(ctx,site.x,600);
+  ctx.save();
+  ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='800 12px "Segoe UI",sans-serif';
+  const signX=site.x, signY=540;
+  ctx.fillStyle=repaired?'#45715a':'#80542e';ctx.fillRect(signX-56,signY-11,112,22);
+  ctx.fillStyle='#fff1c1';ctx.fillText(collected?'✓  MILL STAMP':repaired?'←  HOP ON LIFT':'!  MILL KEEPER',signX,signY);
+  if(repaired&&!collected){ctx.fillStyle='#4b5e40';ctx.font='800 11px "Segoe UI",sans-serif';ctx.fillText('MILL STAMP',prize.x+prize.w/2,prize.y-17);}
+  ctx.restore();
+}
 export function drawCountryPortal(ctx,engine){
   const p=engine.world.portal;if(!engine.visible(p.x,p.w))return;
-  const x=p.x+p.w/2,y=p.y+p.h,ready=engine.learned.size===3;
+  const x=p.x+p.w/2,y=p.y+p.h,ready=engine.learned.size===engine.world.shrines.length;
   ellipse(ctx,x+9,y+3,67,8,'#4c624229');
   if(ready){const glow=ctx.createRadialGradient(x,y-60,5,x,y-60,78);glow.addColorStop(0,'#fff3aa88');glow.addColorStop(1,'#f9eeb800');ctx.fillStyle=glow;ctx.fillRect(x-80,y-147,160,155);}
   drawProp(ctx,'gate',{x,y,yaw:.24});
   ctx.save();ctx.textAlign='center';ctx.fillStyle=ready?'#47664a':'#796e50';ctx.font=`600 28px ${font}`;ctx.fillText(ready?'次':'鍵',x,y-49);
-  ctx.font='800 11px "Segoe UI",sans-serif';ctx.fillStyle='#3c5242';ctx.fillText(ready?'NEXT VILLAGE →':'3 SHRINES',x,y-145);ctx.restore();
+  ctx.font='800 11px "Segoe UI",sans-serif';ctx.fillStyle='#3c5242';ctx.fillText(ready?'NEXT VILLAGE →':`${engine.world.shrines.length} SHRINES`,x,y-145);ctx.restore();
 }

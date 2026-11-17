@@ -61,7 +61,7 @@ export class SoundEngine {
   }
   configure({ music = this.music, sound = this.sound } = {}) { this.music = music; this.sound = sound; this.applyGains(); }
   setMode(mode, world = this.world) { this.mode = mode; this.world = world; this.applyGains(); }
-  applyGains() { if (!this.context) return; const at = this.context.currentTime; const quiet = ['lesson','guide','pause'].includes(this.mode); this.musicBus.gain.setTargetAtTime(this.music && !this.mutedByVisibility ? (quiet ? .04 : .12) : 0, at, .1); this.fxBus.gain.setTargetAtTime(this.sound && !this.mutedByVisibility ? .26 : 0, at, .05); }
+  applyGains() { if (!this.context) return; const at = this.context.currentTime; const quiet = ['lesson','guide','side-quest','pause'].includes(this.mode); this.musicBus.gain.setTargetAtTime(this.music && !this.mutedByVisibility ? (quiet ? .04 : .12) : 0, at, .1); this.fxBus.gain.setTargetAtTime(this.sound && !this.mutedByVisibility ? .26 : 0, at, .05); }
   setHidden(hidden) { this.mutedByVisibility = hidden; this.applyGains(); }
   pulse() { if (!this.context || !this.music || this.mutedByVisibility) return 0; const phase = ((this.context.currentTime - this.startTime) * 148 / 120) % 1; return Math.exp(-phase * 7); }
   dispose() { clearInterval(this.timer); this.timer = null; this.context?.close(); }

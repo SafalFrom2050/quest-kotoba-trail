@@ -52,3 +52,28 @@ dialog::backdrop{background:#36574486;backdrop-filter:blur(5px)}.lesson-pause-la
 .lesson-language-button:hover{background:#dce9c7}
 .language-button:focus-visible{outline:2px solid #567853;outline-offset:3px}
 @media(max-width:360px){.app-header{flex-wrap:wrap}.header-actions{margin-left:auto}}
+
+.waterwheel-dialog{box-sizing:border-box;width:min(540px,calc(100vw - 24px));max-height:calc(100dvh - 24px);padding:30px;overflow:auto}
+.waterwheel-dialog h2{font-size:clamp(23px,5vw,30px);margin:10px 36px 14px 0;color:#3e5d43;line-height:1.15}
+.waterwheel-intro,.waterwheel-success>p:not(.waterwheel-sentence){color:#53664c;line-height:1.55}
+.waterwheel-sentence{margin:16px 0 4px;color:#345840;font-size:clamp(23px,5.4vw,31px);font-weight:700}
+.waterwheel-reading{margin:4px 0 16px;color:#657751;font-size:13px}
+.waterwheel-language{margin-bottom:10px}
+.waterwheel-tools{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.waterwheel-tool{display:grid;grid-template-columns:32px minmax(0,1fr) auto;align-items:center;gap:9px;min-height:76px;padding:10px;border:1px solid #9ba874;border-radius:12px;background:#f3edda;color:#456646;text-align:left;cursor:pointer}
+.waterwheel-tool:hover{background:#e9efd1}
+.waterwheel-tool:focus-visible{outline:2px solid #476b49;outline-offset:3px}
+.waterwheel-tool svg{width:32px;height:32px;shape-rendering:crispEdges}
+.waterwheel-tool strong,.waterwheel-tool small{display:block}
+.waterwheel-tool strong{font-size:19px}
+.waterwheel-tool small{margin-top:3px;color:#5f6b51;font-size:12px;line-height:1.25}
+#waterwheel-hint{margin-top:13px}
+.waterwheel-success{border-top:1px solid #9ba87466;margin-top:12px}
+.waterwheel-success .primary-button{margin-top:8px}
+.mill-stamp{border:1px solid #ae935d55;border-radius:9px;background:#f7ecd1;color:#674d2b;padding:10px 12px;font-size:13px;line-height:1.45}
+@media(max-width:480px){
+  .waterwheel-dialog{padding:21px}
+  .waterwheel-tool{grid-template-columns:25px minmax(0,1fr);gap:6px;padding:8px}
+  .waterwheel-tool svg{width:25px;height:25px}
+  .waterwheel-tool kbd{display:none}
+}

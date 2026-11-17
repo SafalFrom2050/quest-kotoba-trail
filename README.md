@@ -54,6 +54,11 @@ contextual question; language mistakes never cost hearts.
 2. **Windmill Village** — 治す / 直す, 治る / 直る, and ～恐れがある.
 3. **Sunset Shrine** — ～に基づいて, ～ために, and ～ように.
 
+In **Windmill Village**, look for the **Mill Keeper** sign just past the first
+shrine. Choose a tool to repair the waterwheel, ride its lift, and hop to the
+loft for the Mill Stamp. The stamp is saved in the field guide. You can skip
+this side quest and still finish the trail.
+
 The field guide adds 民, ～により, 実, and 米. Thirteen lessons include
 Japanese, kana/romaji, meanings, English or Romanized Nepalish memory hooks, worked
 sentences, and **39 contextual practice questions**. This is a focused review

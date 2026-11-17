@@ -1,3 +1,5 @@
+import { WATERWHEEL_SITE } from './waterwheel.mjs';
+
 /**
  * Hand-built Quest routes. Coordinates are world pixels; y grows downward.
  * Ground is at y=600. Every lesson bridge has its shrine on safe ground first.
@@ -76,7 +78,8 @@ export const WORLDS = [
     id: 'workshop',
     name: 'Windmill Village',
     kicker: 'COUNTRY WORKSHOP',
-    subtitle: 'Help the little village get moving again, one useful phrase at a time.',
+    subtitle: 'Follow the lesson shrines, or stop to help the mill keeper.',
+    waterwheel: WATERWHEEL_SITE,
     accent: '#8b703d',
     sky: ['#b7d4cf', '#f3deb4'],
     width: 4200,

@@ -97,10 +97,40 @@
     <div id="lesson-quiz" hidden><span class="tiny-label">QUICK PRACTICE</span><h3 id="question-prompt"></h3><p class="question-context" id="question-context" lang="ja"></p><p class="example-romaji" id="question-romaji"></p><p class="question-support" id="question-support"></p><div class="answer-choices" id="answer-choices"></div><button class="hint-button" id="hint-button">↳ Peek at the memory note</button><p class="quiz-hint" id="quiz-hint" hidden></p><div class="answer-feedback" id="answer-feedback" hidden aria-live="polite"></div><button class="primary-button" id="continue-button" hidden>Got it. Let's jump! <span>→</span></button></div>
   </dialog>
 
+  <dialog id="waterwheel-dialog" class="waterwheel-dialog" aria-labelledby="waterwheel-title">
+    <button class="dialog-close" id="close-waterwheel-button" aria-label="Close the waterwheel quest">×</button>
+    <div class="eyebrow">WINDMILL VILLAGE · OPTIONAL QUEST</div>
+    <h2 id="waterwheel-title" tabindex="-1">The Broken Waterwheel</h2>
+    <p class="waterwheel-intro">“Our lift is stuck! Could you fix the waterwheel?” asks the mill keeper.</p>
+    <div id="waterwheel-request">
+      <p class="waterwheel-sentence" lang="ja">水車を＿＿ください。</p>
+      <p class="waterwheel-reading">Suisha o ___ kudasai.</p>
+    </div>
+    <div class="lesson-language-row waterwheel-language"><button class="language-button lesson-language-button" data-language-toggle aria-label="Learning hints: English. Switch to Nepalish.">Hints: English ⇄</button></div>
+    <div id="waterwheel-tools" class="waterwheel-tools" aria-label="Choose a tool">
+      <button class="waterwheel-tool" type="button" data-waterwheel-tool="medicine">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><path fill="#815966" d="M11 3h10v6H11z"/><path fill="#bb8a8a" d="M11 8h10v4l3 3v13H8V15l3-3z"/><path fill="#fff0d7" d="M9 17h14v8H9z"/><path fill="#815966" d="M15 18h2v6h-2zM13 20h6v2h-6z"/></svg>
+        <span><strong lang="ja">治して</strong><small>Medicine bottle</small></span><kbd>1</kbd>
+      </button>
+      <button class="waterwheel-tool" type="button" data-waterwheel-tool="wrench">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><path fill="#5f7167" d="m19 3 5 1-5 5 4 4 5-5 1 5-5 5-6-1L8 28H4l-2-3 12-12V8z"/><path fill="#afbf9e" d="m5 25 11-11 2 1L7 27H5z"/></svg>
+        <span><strong lang="ja">直して</strong><small>Wrench</small></span><kbd>2</kbd>
+      </button>
+    </div>
+    <div class="memory-hook" id="waterwheel-hint" role="status" hidden></div>
+    <div class="waterwheel-success" id="waterwheel-success" hidden>
+      <p class="waterwheel-sentence" lang="ja">水車を直してください。</p>
+      <p class="waterwheel-reading">Suisha o naoshite kudasai. · Please fix the waterwheel.</p>
+      <p>Use <strong lang="ja">直す</strong> to fix something that’s broken. The wheel is turning again! Hop onto the lift and jump right at the top to reach the loft.</p>
+      <button class="primary-button" id="waterwheel-continue">Ride the lift <span>→</span></button>
+    </div>
+  </dialog>
+
   <dialog id="guide-dialog" class="guide-dialog" aria-labelledby="guide-title">
     <button class="dialog-close" id="close-guide-button" aria-label="Close field guide">×</button>
     <div class="eyebrow">COLLECT IDEAS, NOT JUST COINS</div><h2 id="guide-title">Quest's field guide</h2><p class="guide-intro">Useful kanji and grammar, ready whenever you need them. Practice stays in this browser.</p>
     <button class="outline-button" id="guide-library-button">Open My Lessons →</button>
+    <p class="mill-stamp" id="mill-stamp" hidden><strong>✦ Mill Stamp</strong> · Waterwheel repaired in Windmill Village.</p>
     <div class="guide-summary" id="guide-summary"></div><div class="guide-filters" id="guide-filters"><button data-filter="all" class="active">Everything</button><button data-filter="kanji">Kanji</button><button data-filter="grammar">Grammar</button><button data-filter="discovered">Discovered</button></div><div class="guide-grid" id="guide-grid"></div><div class="guide-footer"><span>After-lesson practice is recorded as supported practice.</span><button class="outline-button" id="export-button">Export practice log ↓</button></div>
   </dialog>
   <dialog id="library-dialog" class="library-dialog" aria-labelledby="library-heading"></dialog>
