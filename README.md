@@ -12,6 +12,12 @@ lesson shrines to build bridges through three worlds.
 play in your browser, on desktop or mobile. No installation or account needed.
 The game is hosted on GitHub Pages from the root of the `main` branch.
 
+## Contribute
+
+Japanese corrections, lesson ideas, accessibility improvements, and bug fixes
+are welcome. See the [contribution guide](CONTRIBUTING.md) to get started or
+[open an issue](https://github.com/SafalFrom2050/quest-kotoba-trail/issues/new).
+
 ## Play locally
 
 Requires Node.js 18 or newer. There are **no packages to install**.
