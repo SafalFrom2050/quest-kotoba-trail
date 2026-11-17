@@ -167,6 +167,7 @@ export function makePracticeWorld(record, theme = 'wordwood') {
   if (!template) throw new PacketError(['Choose a valid practice trail.']);
   const world = structuredClone(template), lessons = packLessons(record);
   delete world.waterwheel; // Campaign side quests are separate from custom lesson runs.
+  delete world.sentenceBridge;
   const remap = new Map(template.shrines.map((shrine, i) => [shrine.lessonId, lessons[i].id]));
   world.name = record.packet.title; world.kicker = 'MY LESSONS';
   world.subtitle = `${record.packet.level} · Your lesson pack on ${template.name}.`;

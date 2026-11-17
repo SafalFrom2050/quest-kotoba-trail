@@ -1,4 +1,5 @@
 import { WATERWHEEL_SITE } from './waterwheel.mjs';
+import { SENTENCE_BRIDGE_SITE } from './sentence-bridge.mjs';
 
 /**
  * Hand-built Quest routes. Coordinates are world pixels; y grows downward.
@@ -144,7 +145,8 @@ export const WORLDS = [
     id: 'sky',
     name: 'Sunset Shrine',
     kicker: 'GRAMMAR GARDEN',
-    subtitle: 'Follow the lanterns. Let a few good sentences find their place.',
+    subtitle: 'Follow the lanterns. Paper tiles lead to an optional bridge.',
+    sentenceBridge: SENTENCE_BRIDGE_SITE,
     accent: '#836640',
     sky: ['#e3bfa5', '#fae5b5'],
     width: 4200,

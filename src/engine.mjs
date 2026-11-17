@@ -1,8 +1,9 @@
 import { createPlayer, stepPlayer, overlaps, clamp } from './physics.mjs';
 import { getWorld } from './worlds.mjs';
 import { findLesson } from './content.mjs';
-import { drawCountryside, drawCountryWater, drawCountryPlatform, drawCountryShrine, drawCountryPortal, drawCountryWaterwheel } from './countryside.mjs';
+import { drawCountryside, drawCountryWater, drawCountryPlatform, drawCountryShrine, drawCountryPortal, drawCountryWaterwheel, drawCountrySentenceBridge } from './countryside.mjs';
 import { MILL_STAMP, createWaterwheel, advanceWaterwheel } from './waterwheel.mjs';
+import { SENTENCE_STAMP, createSentenceBridge, checkSentenceBridge } from './sentence-bridge.mjs';
 
 const rand = (min, max) => min + Math.random() * (max - min);
 const pixelFont = '"Yu Gothic", "Noto Sans JP", sans-serif';
@@ -20,6 +21,7 @@ export class GameEngine {
   load(id) {
     this.world = typeof id === 'object' && id ? id : getWorld(id) || getWorld('wordwood'); this.player = createPlayer(this.world.spawn); this.player.y = 544;
     this.waterwheel = createWaterwheel(this.world.waterwheel);
+    this.sentenceBridge = createSentenceBridge(this.world.sentenceBridge);
     this.learned = new Set(); this.collected = new Set(); this.enemies = this.world.enemies.map((e,i) => ({ ...e, w: 38, h: 30, direction: i % 2 ? -1 : 1, alive: true }));
     this.score = 0; this.health = 3; this.combo = 0; this.bestCombo = 0; this.comboTime = 0; this.elapsed = 0; this.boost = 0;
     this.checkpoint = { x: this.world.spawn.x, y: 544 }; this.camera = { x: 0, y: 0 }; this.particles = []; this.floaters = []; this.ghosts = [];
@@ -32,6 +34,7 @@ export class GameEngine {
   activePlatforms() {
     const platforms = this.world.platforms.filter(p => !p.gate || this.learned.has(p.gate));
     if (this.waterwheel?.repaired) platforms.push(this.waterwheel.lift, this.waterwheel.site.loft);
+    if (this.sentenceBridge?.built) platforms.push(this.sentenceBridge.site.deck);
     return platforms;
   }
   lessonLookup(id) { return this.lookupLesson(id); }
@@ -41,6 +44,11 @@ export class GameEngine {
     if (shrine) return { type: 'shrine', ...shrine, solved: this.learned.has(shrine.lessonId) };
     if (this.waterwheel && !this.waterwheel.repaired && Math.abs(center - this.waterwheel.site.x) < 74 &&
         Math.abs(p.y + p.h - 600) < 105) return { type: 'waterwheel' };
+    const sentenceBridge = this.sentenceBridge;
+    if (sentenceBridge && !sentenceBridge.built && center < sentenceBridge.site.deck.x &&
+        Math.abs(center - sentenceBridge.site.x) < 68 && Math.abs(p.y + p.h - 600) < 85) {
+      return { type: 'sentence-bridge', remaining: sentenceBridge.site.tiles.length - sentenceBridge.found.size };
+    }
     if (Math.abs(center - (this.world.portal.x + 46)) < 110) return { type: 'portal', ready: this.learned.size === this.world.shrines.length };
     return null;
   }
@@ -49,8 +57,41 @@ export class GameEngine {
     const target = this.nearby(); if (!target) return;
     if (target.type === 'shrine') this.onEvent('lesson', target);
     else if (target.type === 'waterwheel') this.onEvent('waterwheel');
+    else if (target.type === 'sentence-bridge') this.onEvent('sentence-bridge', target);
     else if (target.ready) this.win();
     else { const remaining = this.world.shrines.length - this.learned.size; this.onEvent('toast', { message: `${remaining} lesson shrine${remaining === 1 ? '' : 's'} still glowing. Follow their light!` }); }
+  }
+  submitSentenceBridge(order) {
+    if (this.phase !== 'bridge-puzzle' || this.nearby()?.type !== 'sentence-bridge') return null;
+    return checkSentenceBridge(this.sentenceBridge, order);
+  }
+  updateSentenceBridge() {
+    const state = this.sentenceBridge;
+    if (!state) return;
+    const { tiles, prize } = state.site;
+    if (!state.built) {
+      for (const tile of tiles) {
+        if (state.found.has(tile.id) || !overlaps(this.player, tile)) continue;
+        state.found.add(tile.id);
+        this.burst(tile.x + tile.w / 2, tile.y + tile.h / 2, 13, ['#fff4c2', '#dcab66', '#a4c190']);
+        this.onEvent('sentence-tile', { text: tile.text, count: state.found.size, total: tiles.length });
+      }
+    } else if (!state.collected && overlaps(this.player, prize)) {
+      state.collected = true;
+      this.score += 300;
+      this.burst(prize.x + prize.w / 2, prize.y, 38, ['#ffe9a0', '#d1a977', '#fff4cc']);
+      this.float(prize.x + prize.w / 2, prize.y - 18, '+300 · SENTENCE STAMP', '#684a2a', 2.2);
+      this.onEvent('stamp', { id: SENTENCE_STAMP });
+    }
+  }
+  celebrateSentenceBridge() {
+    const state = this.sentenceBridge;
+    if (!state?.built) return;
+    const { deck, order } = state.site;
+    for (let i = 0; i < order.length; i++) {
+      this.burst(deck.x + deck.w * (i + .5) / order.length, deck.y - 8, 8, ['#fff4c2', '#c4dd9f', '#deac6b']);
+    }
+    this.float(deck.x + deck.w / 2, deck.y - 45, 'BRIDGE BUILT', '#684a2a', 2);
   }
   chooseWaterwheelTool(tool) {
     if (this.phase !== 'side-quest' || this.nearby()?.type !== 'waterwheel') return null;
@@ -131,6 +172,7 @@ export class GameEngine {
     }
     for (const h of this.world.hazards) if (overlaps(p,h)) this.damage('hazard',h.x + h.w / 2);
     this.collectMillStamp();
+    this.updateSentenceBridge();
     if (this.learned.size === this.world.shrines.length && overlaps(p,this.world.portal)) this.win();
     const desired = clamp(p.x - this.view.w * (p.direction < 0 ? .53 : .34), 0, Math.max(0,this.world.width - this.view.w));
     this.camera.x += (desired - this.camera.x) * Math.min(1,dt * 7);
@@ -162,6 +204,7 @@ export class GameEngine {
     for (const platform of this.world.platforms) this.drawPlatform(ctx,platform);
     for (const coin of this.world.coins) if (!this.collected.has(coin.id) && this.visible(coin.x,24)) this.drawCoin(ctx,coin);
     for (const shrine of this.world.shrines) this.drawShrine(ctx,shrine);
+    if (this.sentenceBridge) drawCountrySentenceBridge(ctx, this.sentenceBridge, this);
     this.drawPortal(ctx);
     for (const hazard of this.world.hazards) this.drawHazard(ctx,hazard);
     for (const enemy of this.enemies) if (enemy.alive && this.visible(enemy.x,40)) this.drawEnemy(ctx,enemy);

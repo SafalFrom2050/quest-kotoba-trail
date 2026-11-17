@@ -33,7 +33,7 @@
           <canvas id="game-canvas" width="1280" height="720" tabindex="0" aria-label="Quest platformer. Move with A and D or arrows, jump with Space or W, dash with Shift or K, and interact with E."></canvas>
           <div class="stage-vignette" aria-hidden="true"></div>
           <div class="hud" id="hud" hidden>
-            <div class="hud-world"><span class="tiny-label" id="hud-kicker">TRAIL 01</span><strong id="hud-world">Wordwood</strong></div>
+            <div class="hud-world"><span class="tiny-label" id="hud-kicker">TRAIL 01</span><strong id="hud-world">Wordwood</strong><span class="sentence-tile-count" id="sentence-tile-count" hidden></span></div>
             <div class="hud-health"><span id="hearts" aria-label="3 hearts">♥ ♥ ♥</span><span id="shrines-count">0 / 3 shrines</span></div>
             <div class="hud-score"><strong id="score">000000</strong><span><span id="coins-count">0</span> word sparks <b id="combo"></b></span></div>
           </div>
@@ -126,11 +126,40 @@
     </div>
   </dialog>
 
+  <dialog id="sentence-bridge-dialog" class="sentence-bridge-dialog" aria-labelledby="sentence-bridge-title">
+    <button class="dialog-close" id="close-sentence-bridge" type="button" aria-label="Close Sentence Bridge">×</button>
+    <div class="eyebrow">SUNSET SHRINE · OPTIONAL QUEST</div>
+    <h2 id="sentence-bridge-title" tabindex="-1">Sentence Bridge</h2>
+    <div id="sentence-builder">
+      <p class="sentence-clue"><span class="tiny-label">BUILD THIS MEANING</span><strong id="sentence-meaning"></strong></p>
+      <p class="sentence-instructions">Tap the paper tiles in sentence order. Tap a placed tile to take it back.</p>
+      <ol id="sentence-order" class="sentence-order" aria-label="Your sentence"></ol>
+      <div id="sentence-tile-bank" class="sentence-tile-bank" role="group" aria-label="Paper tiles"></div>
+      <p id="sentence-feedback" class="sentence-feedback" role="status"></p>
+      <div class="sentence-help">
+        <button class="hint-button" id="sentence-hint-button" type="button" aria-expanded="false" aria-controls="sentence-hint">Show or hide hint</button>
+        <button class="language-button lesson-language-button" type="button" data-language-toggle aria-label="Learning hints: English. Switch to Nepalish.">Hints: English ⇄</button>
+      </div>
+      <p id="sentence-hint" class="memory-hook" hidden></p>
+      <div class="sentence-actions">
+        <button class="quiet-button" id="sentence-reset" type="button">Reset tiles</button>
+        <button class="primary-button" id="sentence-check" type="button" disabled>Build bridge <span>→</span></button>
+      </div>
+    </div>
+    <div id="sentence-bridge-success" class="sentence-success" hidden>
+      <p class="sentence-result" id="sentence-result-japanese" lang="ja"></p>
+      <p class="example-romaji" id="sentence-result-reading"></p>
+      <p><strong>The bridge is ready.</strong> ように connects the outcome you want with what you do to make it happen. Cross to the far bank for the Sentence Stamp.</p>
+      <button class="primary-button" id="sentence-bridge-continue" type="button">Cross the bridge <span>→</span></button>
+    </div>
+  </dialog>
+
   <dialog id="guide-dialog" class="guide-dialog" aria-labelledby="guide-title">
     <button class="dialog-close" id="close-guide-button" aria-label="Close field guide">×</button>
     <div class="eyebrow">COLLECT IDEAS, NOT JUST COINS</div><h2 id="guide-title">Quest's field guide</h2><p class="guide-intro">Useful kanji and grammar, ready whenever you need them. Practice stays in this browser.</p>
     <button class="outline-button" id="guide-library-button">Open My Lessons →</button>
     <p class="mill-stamp" id="mill-stamp" hidden><strong>✦ Mill Stamp</strong> · Waterwheel repaired in Windmill Village.</p>
+    <p class="mill-stamp" id="sentence-stamp" hidden><strong>✦ Sentence Stamp</strong> · Sentence Bridge crossed in Sunset Shrine.</p>
     <div class="guide-summary" id="guide-summary"></div><div class="guide-filters" id="guide-filters"><button data-filter="all" class="active">Everything</button><button data-filter="kanji">Kanji</button><button data-filter="grammar">Grammar</button><button data-filter="discovered">Discovered</button></div><div class="guide-grid" id="guide-grid"></div><div class="guide-footer"><span>After-lesson practice is recorded as supported practice.</span><button class="outline-button" id="export-button">Export practice log ↓</button></div>
   </dialog>
   <dialog id="library-dialog" class="library-dialog" aria-labelledby="library-heading"></dialog>

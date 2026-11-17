@@ -186,7 +186,7 @@ test('the stamp survives reload without changing old campaign progress or practi
   let saved = JSON.stringify({ version: 1, worlds: { workshop: { completed: true, bestScore: 1500 } }, discovered: ['naosu'], preferences: { language: 'ne' } });
   const storage = { getItem: () => saved, setItem: (_key, value) => { saved = value; } };
   const first = new ProgressStore(storage);
-  first.awardMillStamp(); first.awardMillStamp();
+  first.awardStamp(MILL_STAMP); first.awardStamp(MILL_STAMP);
   const reloaded = new ProgressStore(storage);
   assert.deepEqual(reloaded.value.stamps, [MILL_STAMP]);
   assert.equal(reloaded.value.worlds.workshop.bestScore, 1500);

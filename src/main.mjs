@@ -7,6 +7,8 @@ import { WORLDS, getWorld } from './worlds.mjs';
 import { LessonLibraryUI } from './library-ui.mjs';
 import { makePracticeWorld, packLessons } from './packs.mjs';
 import { MILL_STAMP } from './waterwheel.mjs';
+import { SENTENCE_STAMP } from './sentence-bridge.mjs';
+import { SentenceBridgeUI } from './sentence-bridge-ui.mjs';
 
 const $ = id => document.getElementById(id);
 const escapeHTML = value => String(value ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -23,6 +25,12 @@ export class QuestApp {
     this.engine = new GameEngine($('game-canvas'),this.atlas,{ onEvent:(type,data)=>this.engineEvent(type,data),pulse:()=>this.audio.pulse(),effects:this.store.value.preferences.effects && !this.motionQuery.matches,lookupLesson:id=>this.findLesson(id) });
     this.lastHUD = 0; this.voice = null; this.lesson = null; this.lessonSource = 'shrine'; this.lessonReturn = 'playing'; this.question = null; this.quizState = 'teach';
     this.customRun = null; this.lessonStore = this.store;
+    this.sentenceUI = new SentenceBridgeUI({
+      onClose:()=>this.closeSentenceBridge(),
+      onCheck:order=>this.engine.submitSentenceBridge(order),
+      language:()=>this.store.value.preferences.language,
+      cue:type=>this.audio.cue(type),
+    });
     this.libraryUI = new LessonLibraryUI({
       qa:this.qa,onClose:()=>this.closeLibrary(),onPlay:(record,theme)=>this.startPack(record,theme),
       onStudy:(lesson,store)=>{this.libraryUI.hide();this.openLesson(lesson.id,{source:'library',store});},
@@ -81,7 +89,7 @@ export class QuestApp {
     });
   }
   keyDown(e) {
-    if(this.phase==='library')return;
+    if(this.phase==='library'||this.phase==='bridge-puzzle')return;
     if(this.phase==='side-quest'){
       if(!e.repeat&&(e.key==='1'||e.key==='2')&&!e.altKey&&!e.ctrlKey&&!e.metaKey){
         e.preventDefault();this.chooseWaterwheelTool(e.key==='1'?'medicine':'wrench');
@@ -142,19 +150,22 @@ export class QuestApp {
   }
   nextAdventure(){if(this.customRun){this.openLibrary();return;}const i=WORLDS.findIndex(w=>w.id===this.engine.world.id);void this.start(WORLDS[(i+1)%WORLDS.length].id);}
   openLibrary(){
-    if(this.phase==='lesson'||this.phase==='side-quest'||this.phase==='library')return;
+    if(['lesson','side-quest','bridge-puzzle','library'].includes(this.phase))return;
     this.phaseBeforeLibrary=this.phase==='guide'?(this.phaseBeforeGuide||'title'):this.phase;
     if($('guide-dialog').open)$('guide-dialog').close();
     this.setPhase('library');this.libraryUI.open();this.audio.cue('click');
   }
   closeLibrary(){this.libraryUI.hide();this.setPhase(this.phaseBeforeLibrary||'title');(this.phase==='playing'?$('game-canvas'):$('library-button')).focus({preventScroll:true});}
-  home(){if($('lesson-dialog').open)$('lesson-dialog').close();if($('guide-dialog').open)$('guide-dialog').close();if($('waterwheel-dialog').open)$('waterwheel-dialog').close();this.libraryUI.hide();this.lesson=null;this.customRun=null;this.lessonStore=this.store;this.selectedWorld=this.store.value.lastWorld;this.engine.load(this.selectedWorld);this.setPhase('title');this.renderTrails();this.renderDiscoveries();this.setFeature(findLesson(WORLD_LESSONS[this.selectedWorld][0]));$('start-button').focus({preventScroll:true});}
+  home(){if($('lesson-dialog').open)$('lesson-dialog').close();if($('guide-dialog').open)$('guide-dialog').close();if($('waterwheel-dialog').open)$('waterwheel-dialog').close();this.sentenceUI.close();this.libraryUI.hide();this.lesson=null;this.customRun=null;this.lessonStore=this.store;this.selectedWorld=this.store.value.lastWorld;this.engine.load(this.selectedWorld);this.setPhase('title');this.renderTrails();this.renderDiscoveries();this.setFeature(findLesson(WORLD_LESSONS[this.selectedWorld][0]));$('start-button').focus({preventScroll:true});}
   pause(){if(this.phase!=='playing')return;this.setPhase('pause');$('resume-button').focus({preventScroll:true});this.audio.cue('click');}
   resume(){if(this.phase!=='pause')return;this.setPhase('playing');$('game-canvas').focus({preventScroll:true});void this.audio.unlock();}
   showWorldBanner(){const w=this.engine.world;$('banner-kicker').textContent=w.kicker;$('banner-title').textContent=w.name;$('banner-subtitle').textContent=w.subtitle;const el=$('world-banner');el.hidden=true;void el.offsetWidth;el.hidden=false;clearTimeout(this.bannerTimer);this.bannerTimer=setTimeout(()=>el.hidden=true,3300);}
   renderTrails(){
-    const earnedStamp=this.store.value.stamps.includes(MILL_STAMP);
-    $('trail-picker').innerHTML=WORLDS.map((world,i)=>`<button class="trail-option ${world.id===this.selectedWorld?'selected':''}" data-world="${world.id}" aria-pressed="${world.id===this.selectedWorld}"><span class="trail-number">0${i+1}</span><span><strong>${escapeHTML(world.name)}</strong><small>${world.waterwheel&&earnedStamp?'✦ mill stamp earned':escapeHTML(world.kicker.toLowerCase())}</small></span><span class="trail-check">${this.store.value.worlds[world.id]?.completed?'✦':'↗'}</span></button>`).join('');
+    const stamps=this.store.value.stamps;
+    $('trail-picker').innerHTML=WORLDS.map((world,i)=>{
+      const subtitle=world.waterwheel&&stamps.includes(MILL_STAMP)?'✦ mill stamp earned':world.sentenceBridge&&stamps.includes(SENTENCE_STAMP)?'✦ sentence stamp earned':world.kicker.toLowerCase();
+      return `<button class="trail-option ${world.id===this.selectedWorld?'selected':''}" data-world="${world.id}" aria-pressed="${world.id===this.selectedWorld}"><span class="trail-number">0${i+1}</span><span><strong>${escapeHTML(world.name)}</strong><small>${escapeHTML(subtitle)}</small></span><span class="trail-check">${this.store.value.worlds[world.id]?.completed?'✦':'↗'}</span></button>`;
+    }).join('');
   }
   learningText(text){return learningText(text,this.store.value.preferences.language);}
   toggleLanguage(){
@@ -179,6 +190,7 @@ export class QuestApp {
       $('question-support').lang=ne&&this.question?.support?.ne?'ne-Latn':'en';
     }
     if(this.phase==='side-quest')this.renderWaterwheelHint();
+    if(this.phase==='bridge-puzzle')this.sentenceUI.renderHint();
   }
   togglePreference(key){const value=!this.store.value.preferences[key];this.store.setPreference(key,value);this.renderPreferences();void this.audio.unlock();if(key!=='sound'||value)this.audio.cue('click');}
   renderPreferences(){
@@ -192,9 +204,23 @@ export class QuestApp {
     if(!this.engine)return;
     if(type==='lesson'){this.openLesson(data.lessonId,{source:'shrine'});return;}
     if(type==='waterwheel'){this.openWaterwheelQuest();return;}
-    if(type==='stamp'&&data.id===MILL_STAMP&&!this.customRun){
-      this.store.awardMillStamp();this.renderTrails();
-      this.audio.cue('win');this.toast('Mill Stamp collected! Find it in the field guide.');this.announce('Mill Stamp collected. 300 bonus points.');
+    if(type==='sentence-bridge'){
+      if(data.remaining){
+        this.toast(`Find ${data.remaining} more paper ${data.remaining===1?'tile':'tiles'} before building. Look back along this bank and above the trail.`);
+      }else{
+        this.setPhase('bridge-puzzle');this.sentenceUI.open(this.engine.sentenceBridge.site);this.audio.cue('shrine');
+      }
+      return;
+    }
+    if(type==='sentence-tile'){
+      this.audio.cue('coin');this.toast(`Paper tile found: ${data.text} · ${data.count} / ${data.total}`);
+    }
+    if(type==='stamp'&&!this.customRun){
+      const name=data.id===MILL_STAMP?'Mill Stamp':data.id===SENTENCE_STAMP?'Sentence Stamp':null;
+      if(name){
+        this.store.awardStamp(data.id);this.renderTrails();
+        this.audio.cue('win');this.toast(`${name} collected! Find it in the field guide.`);this.announce(`${name} collected. 300 bonus points.`);
+      }
     }
     if(type==='toast'){this.toast(data.message);return;}
     if(type==='win'){this.showWin(data);this.audio.cue('win');return;}
@@ -209,12 +235,26 @@ export class QuestApp {
     $('hud-kicker').textContent=this.customRun?'CUSTOM PACK':`TRAIL 0${WORLDS.findIndex(world=>world.id===w.id)+1} · ${w.kicker}`;$('hud-world').textContent=w.name;
     $('hearts').textContent=Array.from({length:3},(_,i)=>i<s.health?'♥':'♡').join(' ');$('hearts').setAttribute('aria-label',`${s.health} hearts`);
     $('shrines-count').textContent=`${s.shrines} / ${w.shrines.length} shrines`;$('score').textContent=String(s.score).padStart(6,'0');$('coins-count').textContent=s.coins;$('combo').textContent=s.combo>=3?`×${s.combo}`:'';$('boost-indicator').hidden=s.boost<=0||this.phase!=='playing';
+    const bridge=this.engine.sentenceBridge, tileCount=$('sentence-tile-count');
+    tileCount.hidden=!bridge;
+    if(bridge)tileCount.textContent=bridge.built?'Sentence Bridge built':`${bridge.found.size} / ${bridge.site.tiles.length} paper tiles`;
     const target=this.phase==='playing'?this.engine.nearby():null;
     $('interact-button').hidden=!target;
-    if(target)$('interact-button').querySelector('span').textContent=target.type==='waterwheel'?'Talk to the mill keeper':target.type==='portal'?(target.ready?'Enter the next adventure':'Find all the shrines'):`${target.solved?'Review':'Explore'} ${this.findLesson(target.lessonId)?.title||'lesson'}`;
-    if(this.phase==='playing')$('status-line').textContent=target?.type==='waterwheel'?'Optional quest: the waterwheel has stopped.':target?.type==='shrine'?'A little discovery is waiting. Press E or tap the shrine button.':s.shrines===w.shrines.length?'The exit portal is glowing. Follow the golden light.':'A / D move · Space double jump · Shift dash · E learn · Esc pause';
+    if(target){
+      const labels={waterwheel:'Talk to the mill keeper','sentence-bridge':target.remaining?'Read the bridge sign':'Build Sentence Bridge',portal:target.ready?'Enter the next adventure':'Find all the shrines'};
+      $('interact-button').querySelector('span').textContent=labels[target.type]||`${target.solved?'Review':'Explore'} ${this.findLesson(target.lessonId)?.title||'lesson'}`;
+    }
+    if(this.phase==='playing')$('status-line').textContent=target?.type==='sentence-bridge'?'Optional quest: collect paper tiles to build a crossing.':target?.type==='waterwheel'?'Optional quest: the waterwheel has stopped.':target?.type==='shrine'?'A little discovery is waiting. Press E or tap the shrine button.':s.shrines===w.shrines.length?'The exit portal is glowing. Follow the golden light.':'A / D move · Space double jump · Shift dash · E learn · Esc pause';
     else if(this.phase==='title')$('status-line').textContent='Pick a trail. Follow the sparks.';
-    else if(['lesson','guide','library','side-quest','pause'].includes(this.phase))$('status-line').textContent='Trail paused. A little understanding goes a long way.';
+    else if(['lesson','guide','library','side-quest','bridge-puzzle','pause'].includes(this.phase))$('status-line').textContent='Trail paused. A little understanding goes a long way.';
+  }
+  closeSentenceBridge(){
+    if(!this.sentenceUI.dialog.open)return;
+    this.sentenceUI.close();this.setPhase('playing');$('game-canvas').focus({preventScroll:true});
+    if(this.engine.sentenceBridge?.built){
+      this.engine.celebrateSentenceBridge();
+      this.toast('Bridge built! Cross to the far bank for the Sentence Stamp.');
+    }
   }
   openWaterwheelQuest(){
     if(this.phase!=='playing'||this.engine.nearby()?.type!=='waterwheel')return;
@@ -285,10 +325,11 @@ export class QuestApp {
   }
   continueLesson(){if(this.quizState==='wrong'){this.hinted=true;this.showQuestion();return;}if(this.quizState==='correct')this.closeLesson();}
   closeLesson(){if(!$('lesson-dialog').open)return;$('lesson-dialog').close();if(globalThis.speechSynthesis)speechSynthesis.cancel();const destination=this.lessonReturn;this.lesson=null;if(destination==='library'){this.setPhase('library');this.libraryUI.open();}else if(destination==='guide'){this.setPhase('guide');this.renderGuide();$('guide-dialog').showModal();$('close-guide-button').focus({preventScroll:true});}else{this.setPhase(destination==='win'?'win':destination==='title'?'title':'playing');$('game-canvas').focus({preventScroll:true});}}
-  openGuide(){if(this.phase==='lesson'||this.phase==='side-quest')return;this.phaseBeforeGuide=this.phase;this.setPhase('guide');this.renderGuide();$('guide-dialog').showModal();$('close-guide-button').focus({preventScroll:true});this.audio.cue('click');}
+  openGuide(){if(['lesson','side-quest','bridge-puzzle'].includes(this.phase))return;this.phaseBeforeGuide=this.phase;this.setPhase('guide');this.renderGuide();$('guide-dialog').showModal();$('close-guide-button').focus({preventScroll:true});this.audio.cue('click');}
   closeGuide(){if(!$('guide-dialog').open)return;$('guide-dialog').close();this.setPhase(this.phaseBeforeGuide||'title');if(this.phase==='playing')$('game-canvas').focus({preventScroll:true});else if(this.phase==='title')$('start-button').focus({preventScroll:true});}
   renderGuide(){
     $('mill-stamp').hidden=!this.store.value.stamps.includes(MILL_STAMP);
+    $('sentence-stamp').hidden=!this.store.value.stamps.includes(SENTENCE_STAMP);
     const stats=practiceStats(this.store.value);$('guide-summary').innerHTML=`<div class="guide-stat"><strong>${stats.discoveries}</strong><span>practice discoveries</span></div><div class="guide-stat"><strong>${stats.correct} / ${stats.tries}</strong><span>practice hits</span></div><div class="guide-stat"><strong>${Object.values(this.store.value.worlds).filter(w=>w.completed).length} / 3</strong><span>trails cleared</span></div>`;
     $('guide-filters').querySelectorAll('button').forEach(b=>b.classList.toggle('active',b.dataset.filter===this.guideFilter));
     const lessons=LESSONS.filter(l=>this.guideFilter==='all'||this.guideFilter===l.kind||(this.guideFilter==='discovered'&&this.store.value.discovered.includes(l.id)));

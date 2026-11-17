@@ -1,5 +1,22 @@
 # Validation notes
 
+## Sentence Bridge — 2026-11-17
+
+- All 55 Node tests and source syntax checks passed. Added checks cover
+  collection from the spawn, refusing incomplete or incorrectly ordered tiles,
+  walking across the built deck, the original jump across the gap, respawning,
+  and keeping both stamps when reloading.
+- In browser QA, Quest collected all four tiles using normal controls. The
+  bridge sign correctly reported a missing tile. A wrong ordering showed the
+  optional English and Nepalish hints, and the tile could be removed and
+  reordered. Keyboard build and walk controls reached the stamp; it persisted
+  after reload without changing campaign shrine or lesson progress.
+- The builder was checked at a 390px viewport with all four tiles visible
+  and no horizontal overflow. No physical phone was tested.
+- Collision code and the existing route geometry were kept. The optional
+  deck uses the existing static bridge collision path; custom packs don't
+  include the campaign-only puzzle.
+
 ## The Broken Waterwheel — 2026-11-17
 
 - All 47 Node tests and source syntax checks passed. The added checks cover

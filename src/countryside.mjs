@@ -173,6 +173,50 @@ export function drawCountryWaterwheel(ctx,state,engine){
   if(repaired&&!collected){ctx.fillStyle='#4b5e40';ctx.font='800 11px "Segoe UI",sans-serif';ctx.fillText('MILL STAMP',prize.x+prize.w/2,prize.y-17);}
   ctx.restore();
 }
+export function drawCountrySentenceBridge(ctx,state,engine){
+  const { site, found, built, collected } = state;
+  ctx.save();
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  for(const tile of site.tiles){
+    if(found.has(tile.id)||!engine.visible(tile.x,tile.w))continue;
+    const { x,y,w,h }=tile;
+    ctx.fillStyle='#695236';ctx.fillRect(x+3,y+4,w,h);
+    ctx.fillStyle='#e0ab67';ctx.fillRect(x,y,w,h);
+    ctx.fillStyle='#fff1c9';ctx.fillRect(x+3,y+3,w-6,h-6);
+    ctx.fillStyle='#5b6d50';ctx.fillRect(x+6,y+6,4,4);ctx.fillRect(x+w-10,y+h-10,4,4);
+    ctx.fillStyle='#3d543f';ctx.font=`700 18px ${font}`;ctx.fillText(tile.text,x+w/2,y+h/2+1);
+  }
+  const { deck, prize }=site;
+  if(engine.visible(deck.x-140,deck.w+260)){
+    if(built){
+      drawRaisedPlatform(ctx,deck,{bridge:true});
+      const step=deck.w/site.order.length;
+      for(const [i,id] of site.order.entries()){
+        ctx.fillStyle='#b77d4d';ctx.fillRect(deck.x+i*step,deck.y+4,2,deck.h-4);
+        ctx.fillStyle='#6d4d30';ctx.font=`700 12px ${font}`;
+        ctx.fillText(site.tiles.find(tile=>tile.id===id).text[0],deck.x+(i+.5)*step,deck.y+12);
+      }
+      const cx=prize.x+prize.w/2,y=prize.y+12;
+      ctx.fillStyle='#745133';ctx.fillRect(cx-17,y+8,34,26);
+      ctx.fillStyle=collected?'#9e7349':'#dba853';ctx.fillRect(cx-19,y+(collected?12:4),38,10);
+      ctx.fillStyle='#ffe393';ctx.fillRect(cx-4,y+12,8,10);
+      if(!collected){
+        ctx.fillRect(cx-2,y-7,4,12);ctx.fillRect(cx-6,y-3,12,4);
+        ctx.fillStyle='#593f30';ctx.font='800 11px "Segoe UI",sans-serif';ctx.fillText('STAMP',cx,y-16);
+      }
+    }else{
+      ctx.strokeStyle='#b783557e';ctx.lineWidth=2;ctx.setLineDash([5,6]);
+      ctx.strokeRect(deck.x+3,deck.y,deck.w-6,9);ctx.setLineDash([]);
+    }
+    ctx.fillStyle='#94734e';ctx.fillRect(site.x-5,552,10,48);
+    ctx.fillStyle=built?'#547450':'#744b36';ctx.fillRect(site.x-70,519,140,41);
+    ctx.fillStyle='#fff1c6';ctx.font='800 12px "Segoe UI",sans-serif';
+    ctx.fillText('SENTENCE BRIDGE',site.x,532);
+    ctx.font='600 10px "Segoe UI",sans-serif';
+    ctx.fillText(built?'✓  CROSS TO THE STAMP':`${found.size} / ${site.tiles.length} PAPER TILES`,site.x,547);
+  }
+  ctx.restore();
+}
 export function drawCountryPortal(ctx,engine){
   const p=engine.world.portal;if(!engine.visible(p.x,p.w))return;
   const x=p.x+p.w/2,y=p.y+p.h,ready=engine.learned.size===engine.world.shrines.length;

@@ -59,6 +59,12 @@ shrine. Choose a tool to repair the waterwheel, ride its lift, and hop to the
 loft for the Mill Stamp. The stamp is saved in the field guide. You can skip
 this side quest and still finish the trail.
 
+In **Sunset Shrine**, collect four **paper tiles** before the first gap. Use
+the spring or jump to reach the higher tiles, then check the **Sentence Bridge**
+sign. Arrange the tiles to match the clue and cross the bridge to earn the
+**Sentence Stamp**. You can undo a tile, take a hint, or retry without losing
+hearts. Both stamps appear in the field guide once collected.
+
 The field guide adds 民, ～により, 実, and 米. Thirteen lessons include
 Japanese, kana/romaji, meanings, English or Romanized Nepalish memory hooks, worked
 sentences, and **39 contextual practice questions**. This is a focused review
